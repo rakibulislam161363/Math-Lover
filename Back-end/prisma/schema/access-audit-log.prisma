@@ -1,0 +1,15 @@
+model AccessAuditLog {
+  id           String       @id @default(uuid()) @db.Uuid
+  enrollmentId String       @db.Uuid
+  adminId      String       @db.Uuid
+  accessType   AccessType
+  action       AccessAction
+  reason       String?
+  createdAt    DateTime     @default(now())
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
+  admin      User       @relation("AccessLogAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([enrollmentId, createdAt])
+  @@index([adminId, createdAt])
+}

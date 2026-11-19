@@ -1,0 +1,26 @@
+model Enrollment {
+  id                     String           @id @default(uuid()) @db.Uuid
+  studentId              String           @db.Uuid
+  batchId                String           @db.Uuid
+  status                 EnrollmentStatus @default(PENDING)
+  enrolledAt             DateTime         @default(now())
+  startedAt              DateTime?
+  endedAt                DateTime?
+  recordedAccessUntil    DateTime?
+  liveAccessEnabled      Boolean          @default(true)
+  materialAccessEnabled  Boolean          @default(true)
+  assignmentAccessEnabled Boolean         @default(true)
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  student  User            @relation("StudentEnrollments", fields: [studentId], references: [id], onDelete: Restrict)
+  batch    Batch           @relation(fields: [batchId], references: [id], onDelete: Restrict)
+  invoices MonthlyInvoice[]
+  payments Payment[]
+  accessLogs AccessAuditLog[]
+
+  @@unique([studentId, batchId])
+  @@index([studentId, status])
+  @@index([batchId, status])
+  @@index([recordedAccessUntil])
+}

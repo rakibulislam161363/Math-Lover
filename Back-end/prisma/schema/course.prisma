@@ -1,0 +1,42 @@
+model Course {
+  id           String     @id @default(uuid()) @db.Uuid
+  title        String
+  slug         String     @unique
+  classLevel   ClassLevel
+  description  String?
+  thumbnailUrl String?
+  isPublished  Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  batches Batch[]
+
+  @@index([classLevel, isPublished])
+}
+
+model Batch {
+  id             String      @id @default(uuid()) @db.Uuid
+  courseId       String     @db.Uuid
+  title          String
+  monthlyFee     Decimal    @db.Decimal(10, 2)
+  capacity       Int?
+  startDate      DateTime?
+  endDate        DateTime?
+  enrollmentOpen Boolean    @default(false)
+  status         BatchStatus @default(DRAFT)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  course       Course          @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  enrollments  Enrollment[]
+  schedules    BatchSchedule[]
+  sessions     ClassSession[]
+  chapters     Chapter[]
+  materials    Material[]
+  assignments Assignment[]
+  quizzes      Quiz[]
+  notices      Notice[]
+
+  @@index([courseId, status, enrollmentOpen])
+  @@index([startDate, endDate])
+}

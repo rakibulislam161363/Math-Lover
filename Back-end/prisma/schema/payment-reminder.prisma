@@ -1,0 +1,16 @@
+model PaymentReminder {
+  id          String          @id @default(uuid()) @db.Uuid
+  invoiceId   String          @db.Uuid
+  userId      String          @db.Uuid
+  scheduledAt DateTime
+  sentAt      DateTime?
+  channel     ReminderChannel @default(IN_APP)
+  status      ReminderStatus  @default(PENDING)
+  createdAt   DateTime        @default(now())
+
+  invoice MonthlyInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, scheduledAt])
+  @@index([userId, createdAt])
+}

@@ -1,0 +1,15 @@
+model Notice {
+  id          String   @id @default(uuid()) @db.Uuid
+  batchId     String?  @db.Uuid
+  title       String
+  content     String
+  publishedAt DateTime?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  batch Batch? @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([isPublished, publishedAt])
+  @@index([batchId, isPublished])
+}

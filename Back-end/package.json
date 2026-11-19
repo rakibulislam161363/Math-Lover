@@ -26,8 +26,9 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsup",
-    "start": "node dist/src/server.js",
+    "build": "tsup src/server.ts --format esm --out-dir dist --clean",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/server.js",
     "postinstall": "prisma skills sync || exit 0"
   }
 }

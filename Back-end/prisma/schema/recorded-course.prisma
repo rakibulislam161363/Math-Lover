@@ -1,0 +1,54 @@
+model Chapter {
+  id          String   @id @default(uuid()) @db.Uuid
+  batchId     String   @db.Uuid
+  title       String
+  description String?
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  batch     Batch      @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+  materials Material[]
+
+  @@index([batchId, sortOrder])
+}
+
+model Lesson {
+  id              String        @id @default(uuid()) @db.Uuid
+  chapterId       String        @db.Uuid
+  title           String
+  description     String?
+  videoProvider   VideoProvider @default(YOUTUBE)
+  videoId         String?
+  videoUrl        String?
+  durationSeconds Int?
+  sortOrder       Int           @default(0)
+  isPublished     Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  chapter  Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+
+  @@index([chapterId, sortOrder, isPublished])
+}
+
+model LessonProgress {
+  id                   String    @id @default(uuid()) @db.Uuid
+  studentId            String    @db.Uuid
+  lessonId             String    @db.Uuid
+  watchedSeconds       Int       @default(0)
+  completionPercentage Decimal   @default(0) @db.Decimal(5, 2)
+  isCompleted          Boolean   @default(false)
+  lastWatchedAt        DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  student User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  lesson  Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, lessonId])
+  @@index([studentId, isCompleted])
+}

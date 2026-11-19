@@ -1,0 +1,38 @@
+model Payment {
+  id                  String          @id @default(uuid()) @db.Uuid
+  studentId           String          @db.Uuid
+  enrollmentId        String          @db.Uuid
+  amount              Decimal         @db.Decimal(10, 2)
+  currency            String          @default("BDT") @db.VarChar(3)
+  provider            PaymentProvider
+  transactionId       String?         @unique
+  gatewayTransactionId String?        @unique
+  idempotencyKey      String?         @unique
+  status              PaymentStatus   @default(INITIATED)
+  paymentMethod       PaymentMethod?
+  paidAt              DateTime?
+  validatedAt         DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  student     User                @relation("StudentPayments", fields: [studentId], references: [id], onDelete: Restrict)
+  enrollment  Enrollment          @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
+  allocations PaymentAllocation[]
+
+  @@index([studentId, status])
+  @@index([enrollmentId, createdAt])
+}
+
+model PaymentAllocation {
+  id              String   @id @default(uuid()) @db.Uuid
+  paymentId       String   @db.Uuid
+  invoiceId       String   @db.Uuid
+  allocatedAmount Decimal  @db.Decimal(10, 2)
+  createdAt       DateTime @default(now())
+
+  payment Payment       @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  invoice MonthlyInvoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+
+  @@unique([paymentId, invoiceId])
+  @@index([invoiceId])
+}

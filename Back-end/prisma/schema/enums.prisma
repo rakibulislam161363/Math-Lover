@@ -1,0 +1,150 @@
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
+enum ClassLevel {
+  CLASS_6
+  CLASS_7
+  CLASS_8
+  CLASS_9
+  CLASS_10
+}
+
+enum BatchStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  COMPLETED
+}
+
+enum EnrollmentStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  SUSPENDED
+}
+
+enum InvoiceStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  INITIATED
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  SSLCOMMERZ
+  BKASH
+  NAGAD
+  BANK
+  MANUAL
+  OTHER
+}
+
+enum PaymentMethod {
+  CARD
+  MOBILE_BANKING
+  BANK_TRANSFER
+  CASH
+  OTHER
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum SessionStatus {
+  SCHEDULED
+  LIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum VideoProvider {
+  YOUTUBE
+}
+
+enum MaterialFileType {
+  PDF
+  IMAGE
+  LINK
+  OTHER
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  REVIEWED
+  LATE
+}
+
+enum QuestionType {
+  MCQ
+  TRUE_FALSE
+}
+
+enum QuizAttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  GRADED
+}
+
+enum NotificationType {
+  PAYMENT_REMINDER
+  SCHEDULE_UPDATE
+  NEW_LESSON
+  ANNOUNCEMENT
+  ASSIGNMENT
+  QUIZ
+  GENERAL
+}
+
+enum ReminderChannel {
+  IN_APP
+  EMAIL
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+enum AccessType {
+  RECORDED
+  LIVE
+  MATERIAL
+  ASSIGNMENT
+}
+
+enum AccessAction {
+  SUSPENDED
+  RESTORED
+  GRANTED
+  REVOKED
+}

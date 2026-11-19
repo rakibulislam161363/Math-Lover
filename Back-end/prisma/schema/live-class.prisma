@@ -1,0 +1,54 @@
+model BatchSchedule {
+  id            String    @id @default(uuid()) @db.Uuid
+  batchId       String    @db.Uuid
+  dayOfWeek     DayOfWeek
+  startTime     String    @db.VarChar(5)
+  endTime       String    @db.VarChar(5)
+  timezone      String    @default("Asia/Dhaka")
+  effectiveFrom DateTime?
+  effectiveUntil DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  batch    Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  sessions ClassSession[]
+
+  @@index([batchId, dayOfWeek, isActive])
+}
+
+model ClassSession {
+  id         String        @id @default(uuid()) @db.Uuid
+  batchId    String        @db.Uuid
+  scheduleId String?       @db.Uuid
+  title      String
+  topic      String?
+  startsAt   DateTime
+  endsAt     DateTime
+  meetUrl    String?
+  status     SessionStatus @default(SCHEDULED)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  batch      Batch          @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  schedule   BatchSchedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+  attendance Attendance[]
+
+  @@index([batchId, startsAt])
+  @@index([status, startsAt])
+}
+
+model Attendance {
+  id        String           @id @default(uuid()) @db.Uuid
+  sessionId String           @db.Uuid
+  studentId String           @db.Uuid
+  status    AttendanceStatus @default(ABSENT)
+  markedAt  DateTime         @default(now())
+  markedBy  String?          @db.Uuid
+
+  session ClassSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student User         @relation(fields: [studentId], references: [id], onDelete: Restrict)
+
+  @@unique([sessionId, studentId])
+  @@index([studentId, status])
+}

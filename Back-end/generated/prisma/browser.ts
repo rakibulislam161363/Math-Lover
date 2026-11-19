@@ -18,7 +18,132 @@ export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
 /**
+ * Model AccessAuditLog
+ * 
+ */
+export type AccessAuditLog = Prisma.AccessAuditLogModel
+/**
+ * Model Assignment
+ * 
+ */
+export type Assignment = Prisma.AssignmentModel
+/**
+ * Model AssignmentSubmission
+ * 
+ */
+export type AssignmentSubmission = Prisma.AssignmentSubmissionModel
+/**
+ * Model Course
+ * 
+ */
+export type Course = Prisma.CourseModel
+/**
+ * Model Batch
+ * 
+ */
+export type Batch = Prisma.BatchModel
+/**
+ * Model Enrollment
+ * 
+ */
+export type Enrollment = Prisma.EnrollmentModel
+/**
+ * Model MonthlyInvoice
+ * 
+ */
+export type MonthlyInvoice = Prisma.MonthlyInvoiceModel
+/**
+ * Model BatchSchedule
+ * 
+ */
+export type BatchSchedule = Prisma.BatchScheduleModel
+/**
+ * Model ClassSession
+ * 
+ */
+export type ClassSession = Prisma.ClassSessionModel
+/**
+ * Model Attendance
+ * 
+ */
+export type Attendance = Prisma.AttendanceModel
+/**
+ * Model Material
+ * 
+ */
+export type Material = Prisma.MaterialModel
+/**
+ * Model Notice
+ * 
+ */
+export type Notice = Prisma.NoticeModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model PaymentReminder
+ * 
+ */
+export type PaymentReminder = Prisma.PaymentReminderModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model PaymentAllocation
+ * 
+ */
+export type PaymentAllocation = Prisma.PaymentAllocationModel
+/**
+ * Model Quiz
+ * 
+ */
+export type Quiz = Prisma.QuizModel
+/**
+ * Model QuizQuestion
+ * 
+ */
+export type QuizQuestion = Prisma.QuizQuestionModel
+/**
+ * Model QuizOption
+ * 
+ */
+export type QuizOption = Prisma.QuizOptionModel
+/**
+ * Model QuizAttempt
+ * 
+ */
+export type QuizAttempt = Prisma.QuizAttemptModel
+/**
+ * Model QuizAnswer
+ * 
+ */
+export type QuizAnswer = Prisma.QuizAnswerModel
+/**
+ * Model Chapter
+ * 
+ */
+export type Chapter = Prisma.ChapterModel
+/**
+ * Model Lesson
+ * 
+ */
+export type Lesson = Prisma.LessonModel
+/**
+ * Model LessonProgress
+ * 
+ */
+export type LessonProgress = Prisma.LessonProgressModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model StudentProfile
+ * 
+ */
+export type StudentProfile = Prisma.StudentProfileModel
