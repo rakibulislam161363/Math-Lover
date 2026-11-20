@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.ts"
-import type * as Prisma from "../internal/prismaNamespace.ts"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model User
@@ -225,6 +225,7 @@ export type UserWhereInput = {
   paymentReminders?: Prisma.PaymentReminderListRelationFilter
   accessAuditLogs?: Prisma.AccessAuditLogListRelationFilter
   reviewedSubmissions?: Prisma.AssignmentSubmissionListRelationFilter
+  refreshSessions?: Prisma.RefreshSessionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -248,6 +249,7 @@ export type UserOrderByWithRelationInput = {
   paymentReminders?: Prisma.PaymentReminderOrderByRelationAggregateInput
   accessAuditLogs?: Prisma.AccessAuditLogOrderByRelationAggregateInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionOrderByRelationAggregateInput
+  refreshSessions?: Prisma.RefreshSessionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -274,6 +276,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   paymentReminders?: Prisma.PaymentReminderListRelationFilter
   accessAuditLogs?: Prisma.AccessAuditLogListRelationFilter
   reviewedSubmissions?: Prisma.AssignmentSubmissionListRelationFilter
+  refreshSessions?: Prisma.RefreshSessionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -327,6 +330,7 @@ export type UserCreateInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -350,6 +354,7 @@ export type UserUncheckedCreateInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -373,6 +378,7 @@ export type UserUpdateInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -396,6 +402,7 @@ export type UserUncheckedUpdateInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -626,6 +633,20 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
 }
 
+export type UserCreateNestedOneWithoutRefreshSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefreshSessionsInput, Prisma.UserUncheckedCreateWithoutRefreshSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRefreshSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefreshSessionsInput, Prisma.UserUncheckedCreateWithoutRefreshSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshSessionsInput
+  upsert?: Prisma.UserUpsertWithoutRefreshSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefreshSessionsInput, Prisma.UserUpdateWithoutRefreshSessionsInput>, Prisma.UserUncheckedUpdateWithoutRefreshSessionsInput>
+}
+
 export type UserCreateNestedOneWithoutStudentProfileInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutStudentProfileInput, Prisma.UserUncheckedCreateWithoutStudentProfileInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentProfileInput
@@ -660,6 +681,7 @@ export type UserCreateWithoutAccessAuditLogsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccessAuditLogsInput = {
@@ -682,6 +704,7 @@ export type UserUncheckedCreateWithoutAccessAuditLogsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccessAuditLogsInput = {
@@ -720,6 +743,7 @@ export type UserUpdateWithoutAccessAuditLogsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccessAuditLogsInput = {
@@ -742,6 +766,7 @@ export type UserUncheckedUpdateWithoutAccessAuditLogsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignmentSubmissionsInput = {
@@ -764,6 +789,7 @@ export type UserCreateWithoutAssignmentSubmissionsInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentSubmissionsInput = {
@@ -786,6 +812,7 @@ export type UserUncheckedCreateWithoutAssignmentSubmissionsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentSubmissionsInput = {
@@ -813,6 +840,7 @@ export type UserCreateWithoutReviewedSubmissionsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
@@ -835,6 +863,7 @@ export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewedSubmissionsInput = {
@@ -873,6 +902,7 @@ export type UserUpdateWithoutAssignmentSubmissionsInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentSubmissionsInput = {
@@ -895,6 +925,7 @@ export type UserUncheckedUpdateWithoutAssignmentSubmissionsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewedSubmissionsInput = {
@@ -928,6 +959,7 @@ export type UserUpdateWithoutReviewedSubmissionsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
@@ -950,6 +982,7 @@ export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEnrollmentsInput = {
@@ -972,6 +1005,7 @@ export type UserCreateWithoutEnrollmentsInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEnrollmentsInput = {
@@ -994,6 +1028,7 @@ export type UserUncheckedCreateWithoutEnrollmentsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEnrollmentsInput = {
@@ -1032,6 +1067,7 @@ export type UserUpdateWithoutEnrollmentsInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEnrollmentsInput = {
@@ -1054,6 +1090,7 @@ export type UserUncheckedUpdateWithoutEnrollmentsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAttendancesInput = {
@@ -1076,6 +1113,7 @@ export type UserCreateWithoutAttendancesInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAttendancesInput = {
@@ -1098,6 +1136,7 @@ export type UserUncheckedCreateWithoutAttendancesInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAttendancesInput = {
@@ -1136,6 +1175,7 @@ export type UserUpdateWithoutAttendancesInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttendancesInput = {
@@ -1158,6 +1198,7 @@ export type UserUncheckedUpdateWithoutAttendancesInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1180,6 +1221,7 @@ export type UserCreateWithoutNotificationsInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1202,6 +1244,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1240,6 +1283,7 @@ export type UserUpdateWithoutNotificationsInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1262,6 +1306,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentRemindersInput = {
@@ -1284,6 +1329,7 @@ export type UserCreateWithoutPaymentRemindersInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentRemindersInput = {
@@ -1306,6 +1352,7 @@ export type UserUncheckedCreateWithoutPaymentRemindersInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentRemindersInput = {
@@ -1344,6 +1391,7 @@ export type UserUpdateWithoutPaymentRemindersInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentRemindersInput = {
@@ -1366,6 +1414,7 @@ export type UserUncheckedUpdateWithoutPaymentRemindersInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1388,6 +1437,7 @@ export type UserCreateWithoutPaymentsInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1410,6 +1460,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1448,6 +1499,7 @@ export type UserUpdateWithoutPaymentsInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1470,6 +1522,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQuizAttemptsInput = {
@@ -1492,6 +1545,7 @@ export type UserCreateWithoutQuizAttemptsInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQuizAttemptsInput = {
@@ -1514,6 +1568,7 @@ export type UserUncheckedCreateWithoutQuizAttemptsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQuizAttemptsInput = {
@@ -1552,6 +1607,7 @@ export type UserUpdateWithoutQuizAttemptsInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQuizAttemptsInput = {
@@ -1574,6 +1630,7 @@ export type UserUncheckedUpdateWithoutQuizAttemptsInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLessonProgressInput = {
@@ -1596,6 +1653,7 @@ export type UserCreateWithoutLessonProgressInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLessonProgressInput = {
@@ -1618,6 +1676,7 @@ export type UserUncheckedCreateWithoutLessonProgressInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLessonProgressInput = {
@@ -1656,6 +1715,7 @@ export type UserUpdateWithoutLessonProgressInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLessonProgressInput = {
@@ -1672,6 +1732,115 @@ export type UserUncheckedUpdateWithoutLessonProgressInput = {
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutStudentNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStudentNestedInput
   attendances?: Prisma.AttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  assignmentSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutStudentNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutStudentNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
+  accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRefreshSessionsInput = {
+  id?: string
+  fullName: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutStudentInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutStudentInput
+  attendances?: Prisma.AttendanceCreateNestedManyWithoutStudentInput
+  lessonProgress?: Prisma.LessonProgressCreateNestedManyWithoutStudentInput
+  assignmentSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutStudentInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutStudentInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
+  accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
+  reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutRefreshSessionsInput = {
+  id?: string
+  fullName: string
+  email: string
+  passwordHash: string
+  phone?: string | null
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStudentInput
+  attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutStudentInput
+  lessonProgress?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutStudentInput
+  assignmentSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutStudentInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutStudentInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
+  accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutRefreshSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefreshSessionsInput, Prisma.UserUncheckedCreateWithoutRefreshSessionsInput>
+}
+
+export type UserUpsertWithoutRefreshSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRefreshSessionsInput, Prisma.UserUncheckedUpdateWithoutRefreshSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefreshSessionsInput, Prisma.UserUncheckedCreateWithoutRefreshSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRefreshSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRefreshSessionsInput, Prisma.UserUncheckedUpdateWithoutRefreshSessionsInput>
+}
+
+export type UserUpdateWithoutRefreshSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutStudentNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutStudentNestedInput
+  attendances?: Prisma.AttendanceUpdateManyWithoutStudentNestedInput
+  lessonProgress?: Prisma.LessonProgressUpdateManyWithoutStudentNestedInput
+  assignmentSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutStudentNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutStudentNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
+  accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
+  reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRefreshSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutStudentNestedInput
+  attendances?: Prisma.AttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  lessonProgress?: Prisma.LessonProgressUncheckedUpdateManyWithoutStudentNestedInput
   assignmentSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutStudentNestedInput
   quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutStudentNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1700,6 +1869,7 @@ export type UserCreateWithoutStudentProfileInput = {
   paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -1722,6 +1892,7 @@ export type UserUncheckedCreateWithoutStudentProfileInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutUserInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedCreateNestedManyWithoutAdminInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedCreateNestedManyWithoutReviewerInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -1760,6 +1931,7 @@ export type UserUpdateWithoutStudentProfileInput = {
   paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -1782,6 +1954,7 @@ export type UserUncheckedUpdateWithoutStudentProfileInput = {
   paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutUserNestedInput
   accessAuditLogs?: Prisma.AccessAuditLogUncheckedUpdateManyWithoutAdminNestedInput
   reviewedSubmissions?: Prisma.AssignmentSubmissionUncheckedUpdateManyWithoutReviewerNestedInput
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1800,6 +1973,7 @@ export type UserCountOutputType = {
   paymentReminders: number
   accessAuditLogs: number
   reviewedSubmissions: number
+  refreshSessions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1813,6 +1987,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   paymentReminders?: boolean | UserCountOutputTypeCountPaymentRemindersArgs
   accessAuditLogs?: boolean | UserCountOutputTypeCountAccessAuditLogsArgs
   reviewedSubmissions?: boolean | UserCountOutputTypeCountReviewedSubmissionsArgs
+  refreshSessions?: boolean | UserCountOutputTypeCountRefreshSessionsArgs
 }
 
 /**
@@ -1895,6 +2070,13 @@ export type UserCountOutputTypeCountReviewedSubmissionsArgs<ExtArgs extends runt
   where?: Prisma.AssignmentSubmissionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRefreshSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefreshSessionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1917,6 +2099,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   paymentReminders?: boolean | Prisma.User$paymentRemindersArgs<ExtArgs>
   accessAuditLogs?: boolean | Prisma.User$accessAuditLogsArgs<ExtArgs>
   reviewedSubmissions?: boolean | Prisma.User$reviewedSubmissionsArgs<ExtArgs>
+  refreshSessions?: boolean | Prisma.User$refreshSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1969,6 +2152,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   paymentReminders?: boolean | Prisma.User$paymentRemindersArgs<ExtArgs>
   accessAuditLogs?: boolean | Prisma.User$accessAuditLogsArgs<ExtArgs>
   reviewedSubmissions?: boolean | Prisma.User$reviewedSubmissionsArgs<ExtArgs>
+  refreshSessions?: boolean | Prisma.User$refreshSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1988,6 +2172,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     paymentReminders: Prisma.$PaymentReminderPayload<ExtArgs>[]
     accessAuditLogs: Prisma.$AccessAuditLogPayload<ExtArgs>[]
     reviewedSubmissions: Prisma.$AssignmentSubmissionPayload<ExtArgs>[]
+    refreshSessions: Prisma.$RefreshSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2404,6 +2589,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   paymentReminders<T extends Prisma.User$paymentRemindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentRemindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accessAuditLogs<T extends Prisma.User$accessAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accessAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewedSubmissions<T extends Prisma.User$reviewedSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssignmentSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  refreshSessions<T extends Prisma.User$refreshSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3091,6 +3277,30 @@ export type User$reviewedSubmissionsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.AssignmentSubmissionScalarFieldEnum | Prisma.AssignmentSubmissionScalarFieldEnum[]
+}
+
+/**
+ * User.refreshSessions
+ */
+export type User$refreshSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RefreshSession
+   */
+  select?: Prisma.RefreshSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RefreshSession
+   */
+  omit?: Prisma.RefreshSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefreshSessionInclude<ExtArgs> | null
+  where?: Prisma.RefreshSessionWhereInput
+  orderBy?: Prisma.RefreshSessionOrderByWithRelationInput | Prisma.RefreshSessionOrderByWithRelationInput[]
+  cursor?: Prisma.RefreshSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefreshSessionScalarFieldEnum | Prisma.RefreshSessionScalarFieldEnum[]
 }
 
 /**

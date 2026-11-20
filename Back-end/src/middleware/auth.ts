@@ -53,7 +53,8 @@ export const auth = (...requiredRoles: UserRole[]) => {
       typeof payload !== "object" ||
       payload === null ||
       typeof payload.id !== "string" ||
-      !payload.id
+      !payload.id ||
+      payload.tokenType !== "access"
     ) {
       throw new HttpError(httpStatus.UNAUTHORIZED, "Invalid token.");
     }
