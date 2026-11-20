@@ -1,10 +1,10 @@
 import express, { Application } from "express";
 import cors from "cors";
-import config from "./config";
+import config from "./app/config";
 import cookieParser from "cookie-parser";
-import { globalErrorHandler } from "./middleware/globalErrorHandler";
-import { notFound } from "./middleware/notFoundPage";
-import authRoutes from "./modules/auth/auth.route";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFoundPage";
+import authRoutes from "./app/modules/auth/auth.route";
 
 const app: Application = express();
 app.use(

@@ -8,7 +8,7 @@ var __export = (target, all) => {
 import express from "express";
 import cors from "cors";
 
-// src/config/index.ts
+// src/app/config/index.ts
 import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.join(process.cwd(), ".env") });
@@ -22,7 +22,7 @@ var config_default = config;
 // src/app.ts
 import cookieParser from "cookie-parser";
 
-// src/middleware/globalErrorHandler.ts
+// src/app/middleware/globalErrorHandler.ts
 import httpStatus from "http-status";
 
 // generated/prisma/client.ts
@@ -510,7 +510,7 @@ var UserRole = {
 globalThis["__dirname"] = path2.dirname(fileURLToPath(import.meta.url));
 var PrismaClient = getPrismaClientClass();
 
-// src/utils/httpError.ts
+// src/app/utils/httpError.ts
 var HttpError = class extends Error {
   constructor(statusCode, message) {
     super(message);
@@ -520,7 +520,7 @@ var HttpError = class extends Error {
   statusCode;
 };
 
-// src/middleware/globalErrorHandler.ts
+// src/app/middleware/globalErrorHandler.ts
 var globalErrorHandler = (error, req, res, next) => {
   if (res.headersSent) {
     next(error);
@@ -560,7 +560,7 @@ var globalErrorHandler = (error, req, res, next) => {
   });
 };
 
-// src/middleware/notFoundPage.ts
+// src/app/middleware/notFoundPage.ts
 var notFound = (req, res) => {
   res.status(404).json({
     success: false,
@@ -570,20 +570,20 @@ var notFound = (req, res) => {
   });
 };
 
-// src/modules/auth/auth.route.ts
+// src/app/modules/auth/auth.route.ts
 import { Router } from "express";
 
-// src/middleware/auth.ts
+// src/app/middleware/auth.ts
 import httpStatus2 from "http-status";
 
-// src/lib/prisma.ts
+// src/app/lib/prisma.ts
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 var connectionString = `${process.env.DATABASE_URL}`;
 var adapter = new PrismaPg({ connectionString });
 var prisma = new PrismaClient({ adapter });
 
-// src/utils/jwt.ts
+// src/app/utils/jwt.ts
 import jwt from "jsonwebtoken";
 var createToken = (payload, secret, expiresIn) => {
   return jwt.sign(payload, secret, { expiresIn });
@@ -613,14 +613,14 @@ var jwtUtils = {
   verifyToken
 };
 
-// src/utils/catchAsync.ts
+// src/app/utils/catchAsync.ts
 var catchAsync = (handler) => {
   return (req, res, next) => {
     Promise.resolve(handler(req, res, next)).catch(next);
   };
 };
 
-// src/middleware/auth.ts
+// src/app/middleware/auth.ts
 var auth = (...requiredRoles) => {
   return catchAsync(async (req, res, next) => {
     const authorization = req.headers.authorization;
@@ -674,10 +674,10 @@ var auth = (...requiredRoles) => {
   });
 };
 
-// src/modules/auth/auth.controler.ts
+// src/app/modules/auth/auth.controller.ts
 import httpStatus5 from "http-status";
 
-// src/utils/sendResponse.ts
+// src/app/utils/sendResponse.ts
 var sendResponse = (res, data) => {
   res.status(data.statusCode).json({
     success: data.success,
@@ -688,7 +688,7 @@ var sendResponse = (res, data) => {
   });
 };
 
-// src/modules/auth/auth.service.ts
+// src/app/modules/auth/auth.service.ts
 import bcrypt from "bcryptjs";
 import { createHash, randomBytes } from "crypto";
 import httpStatus3 from "http-status";
@@ -854,7 +854,7 @@ async function revokeRefreshToken(refreshToken) {
   });
 }
 
-// src/modules/auth/auth.validation.ts
+// src/app/modules/auth/auth.validation.ts
 import httpStatus4 from "http-status";
 var MAX_PASSWORD_BYTES = 72;
 function getObjectBody(body) {
@@ -924,7 +924,7 @@ function validateRefreshToken(token) {
   return token;
 }
 
-// src/modules/auth/auth.controler.ts
+// src/app/modules/auth/auth.controller.ts
 var cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
@@ -1012,7 +1012,7 @@ var authController = {
   refreshTokens: refreshTokens2
 };
 
-// src/modules/auth/auth.route.ts
+// src/app/modules/auth/auth.route.ts
 var router = Router();
 router.post("/register", authController.register);
 router.post("/login", authController.login);
