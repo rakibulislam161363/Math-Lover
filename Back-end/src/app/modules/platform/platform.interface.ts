@@ -1,16 +1,9 @@
 import { Prisma } from "../../../generated/prisma/client";
 import {
   AttendanceStatus,
-  ClassLevel,
   QuestionType,
 } from "../../../generated/prisma/enums";
 
-export type CourseClassLevel = ClassLevel;
-export type CourseCreateInput = Prisma.CourseUncheckedCreateInput;
-export type CourseUpdateInput = Prisma.CourseUncheckedUpdateInput;
-export type BatchCreateInput = Prisma.BatchUncheckedCreateInput;
-export type BatchUpdateInput = Prisma.BatchUncheckedUpdateInput;
-export type EnrollmentUpdateInput = Prisma.EnrollmentUncheckedUpdateInput;
 export type ChapterCreateInput = Omit<Prisma.ChapterUncheckedCreateInput, "batchId">;
 export type ChapterUpdateInput = Prisma.ChapterUncheckedUpdateInput;
 export type LessonCreateInput = Omit<Prisma.LessonUncheckedCreateInput, "chapterId">;
@@ -72,14 +65,3 @@ export type QuizAnswersInput = {
 };
 export type NoticeCreateInput = Prisma.NoticeUncheckedCreateInput;
 export type NoticeUpdateInput = Prisma.NoticeUncheckedUpdateInput;
-export type InvoiceCreateInput = Prisma.MonthlyInvoiceUncheckedCreateInput;
-export type InvoiceUpdateInput = Prisma.MonthlyInvoiceUncheckedUpdateInput;
-export type PaymentCreateInput = Omit<
-  Prisma.PaymentUncheckedCreateInput,
-  "studentId"
->;
-export type PaymentUpdateInput = Prisma.PaymentUncheckedUpdateInput;
-export type AccessLogCreateInput = Omit<
-  Prisma.AccessAuditLogUncheckedCreateInput,
-  "adminId"
->;

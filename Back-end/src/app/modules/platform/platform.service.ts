@@ -1,20 +1,11 @@
 import { prisma } from "../../lib/prisma";
 import {
-  AccessLogCreateInput,
   AssignmentCreateInput,
   AssignmentSubmissionInput,
   AssignmentUpdateInput,
   AttendanceInput,
-  BatchCreateInput,
-  BatchUpdateInput,
   ChapterCreateInput,
   ChapterUpdateInput,
-  CourseCreateInput,
-  CourseClassLevel,
-  CourseUpdateInput,
-  EnrollmentUpdateInput,
-  InvoiceCreateInput,
-  InvoiceUpdateInput,
   LessonCreateInput,
   LessonProgressInput,
   LessonUpdateInput,
@@ -22,8 +13,6 @@ import {
   MaterialUpdateInput,
   NoticeCreateInput,
   NoticeUpdateInput,
-  PaymentCreateInput,
-  PaymentUpdateInput,
   QuizAnswersInput,
   QuizCreateInput,
   QuizUpdateInput,
@@ -32,59 +21,6 @@ import {
   SessionUpdateInput,
   SubmissionReviewInput,
 } from "./platform.interface";
-
-export const listCourses = (
-  classLevel?: CourseClassLevel,
-  includeUnpublished = false,
-) =>
-  prisma.course.findMany({
-    where: {
-      isPublished: includeUnpublished ? undefined : true,
-      classLevel,
-    },
-    include: { batches: true },
-  });
-export const createCourse = (data: CourseCreateInput) =>
-  prisma.course.create({ data });
-export const getCourse = (slug: string) =>
-  prisma.course.findUnique({ where: { slug }, include: { batches: true } });
-export const updateCourse = (id: string, data: CourseUpdateInput) =>
-  prisma.course.update({ where: { id }, data });
-export const deleteCourse = (id: string) =>
-  prisma.course.delete({ where: { id } });
-
-export const listBatches = (courseId?: string) =>
-  prisma.batch.findMany({
-    where: { courseId },
-    include: { course: true },
-  });
-export const createBatch = (data: BatchCreateInput) =>
-  prisma.batch.create({ data });
-export const getBatch = (id: string) =>
-  prisma.batch.findUnique({
-    where: { id },
-    include: { course: true, schedules: true, chapters: true },
-  });
-export const updateBatch = (id: string, data: BatchUpdateInput) =>
-  prisma.batch.update({ where: { id }, data });
-export const deleteBatch = (id: string) =>
-  prisma.batch.delete({ where: { id } });
-
-export const createEnrollment = (studentId: string, batchId: string) =>
-  prisma.enrollment.create({
-    data: { batchId, studentId, status: "PENDING" },
-  });
-export const listEnrollmentsForStudent = (studentId: string) =>
-  prisma.enrollment.findMany({
-    where: { studentId },
-    include: { batch: { include: { course: true } } },
-  });
-export const listEnrollments = () =>
-  prisma.enrollment.findMany({
-    include: { student: true, batch: { include: { course: true } } },
-  });
-export const updateEnrollment = (id: string, data: EnrollmentUpdateInput) =>
-  prisma.enrollment.update({ where: { id }, data });
 
 export const listChapters = (batchId: string) =>
   prisma.chapter.findMany({
@@ -321,28 +257,3 @@ export const markNotificationRead = (id: string, userId: string) =>
     data: { readAt: new Date() },
   });
 
-export const listInvoices = (enrollmentId: string) =>
-  prisma.monthlyInvoice.findMany({ where: { enrollmentId } });
-export const createInvoice = (data: InvoiceCreateInput) =>
-  prisma.monthlyInvoice.create({ data });
-export const updateInvoice = (id: string, data: InvoiceUpdateInput) =>
-  prisma.monthlyInvoice.update({ where: { id }, data });
-export const listPaymentsForStudent = (studentId: string) =>
-  prisma.payment.findMany({
-    where: { studentId },
-    include: { allocations: true },
-  });
-export const createPayment = (studentId: string, data: PaymentCreateInput) =>
-  prisma.payment.create({ data: { ...data, studentId } });
-export const updatePayment = (id: string, data: PaymentUpdateInput) =>
-  prisma.payment.update({ where: { id }, data });
-
-export const createAccessLog = (
-  adminId: string,
-  data: AccessLogCreateInput,
-) => prisma.accessAuditLog.create({ data: { ...data, adminId } });
-export const listAccessLogs = (enrollmentId: string) =>
-  prisma.accessAuditLog.findMany({
-    where: { enrollmentId },
-    orderBy: { createdAt: "desc" },
-  });

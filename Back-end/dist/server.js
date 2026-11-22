@@ -1441,39 +1441,6 @@ import { Router as Router2 } from "express";
 import httpStatus6 from "http-status";
 
 // src/app/modules/platform/platform.service.ts
-var listCourses = (classLevel, includeUnpublished = false) => prisma.course.findMany({
-  where: {
-    isPublished: includeUnpublished ? void 0 : true,
-    classLevel
-  },
-  include: { batches: true }
-});
-var createCourse = (data) => prisma.course.create({ data });
-var getCourse = (slug) => prisma.course.findUnique({ where: { slug }, include: { batches: true } });
-var updateCourse = (id, data) => prisma.course.update({ where: { id }, data });
-var deleteCourse = (id) => prisma.course.delete({ where: { id } });
-var listBatches = (courseId) => prisma.batch.findMany({
-  where: { courseId },
-  include: { course: true }
-});
-var createBatch = (data) => prisma.batch.create({ data });
-var getBatch = (id) => prisma.batch.findUnique({
-  where: { id },
-  include: { course: true, schedules: true, chapters: true }
-});
-var updateBatch = (id, data) => prisma.batch.update({ where: { id }, data });
-var deleteBatch = (id) => prisma.batch.delete({ where: { id } });
-var createEnrollment = (studentId, batchId) => prisma.enrollment.create({
-  data: { batchId, studentId, status: "PENDING" }
-});
-var listEnrollmentsForStudent = (studentId) => prisma.enrollment.findMany({
-  where: { studentId },
-  include: { batch: { include: { course: true } } }
-});
-var listEnrollments = () => prisma.enrollment.findMany({
-  include: { student: true, batch: { include: { course: true } } }
-});
-var updateEnrollment = (id, data) => prisma.enrollment.update({ where: { id }, data });
 var listChapters = (batchId) => prisma.chapter.findMany({
   where: { batchId },
   orderBy: { sortOrder: "asc" },
@@ -1626,20 +1593,6 @@ var markNotificationRead = (id, userId) => prisma.notification.updateMany({
   where: { id, userId },
   data: { readAt: /* @__PURE__ */ new Date() }
 });
-var listInvoices = (enrollmentId) => prisma.monthlyInvoice.findMany({ where: { enrollmentId } });
-var createInvoice = (data) => prisma.monthlyInvoice.create({ data });
-var updateInvoice = (id, data) => prisma.monthlyInvoice.update({ where: { id }, data });
-var listPaymentsForStudent = (studentId) => prisma.payment.findMany({
-  where: { studentId },
-  include: { allocations: true }
-});
-var createPayment = (studentId, data) => prisma.payment.create({ data: { ...data, studentId } });
-var updatePayment = (id, data) => prisma.payment.update({ where: { id }, data });
-var createAccessLog = (adminId, data) => prisma.accessAuditLog.create({ data: { ...data, adminId } });
-var listAccessLogs = (enrollmentId) => prisma.accessAuditLog.findMany({
-  where: { enrollmentId },
-  orderBy: { createdAt: "desc" }
-});
 
 // src/app/modules/platform/platform.controller.ts
 var respond = (message, action, statusCode = httpStatus6.OK) => catchAsync(async (req, res) => {
@@ -1659,77 +1612,6 @@ var requireUser = (req) => {
   }
   return req.user;
 };
-var listCourses2 = respond(
-  "Courses retrieved successfully.",
-  (req) => listCourses(
-    typeof req.query.classLevel === "string" ? req.query.classLevel : void 0,
-    req.query.all === "true"
-  )
-);
-var createCourse2 = respond(
-  "Course created successfully.",
-  (req) => createCourse(req.body),
-  httpStatus6.CREATED
-);
-var getCourse2 = respond("Course retrieved successfully.", async (req) => {
-  const course = await getCourse(param(req, "slug"));
-  if (!course) throw new HttpError(httpStatus6.NOT_FOUND, "Course not found.");
-  return course;
-});
-var updateCourse2 = respond(
-  "Course updated successfully.",
-  (req) => updateCourse(
-    param(req, "id"),
-    req.body
-  )
-);
-var deleteCourse2 = respond(
-  "Course deleted successfully.",
-  (req) => deleteCourse(param(req, "id"))
-);
-var listBatches2 = respond(
-  "Batches retrieved successfully.",
-  (req) => listBatches(
-    typeof req.query.courseId === "string" ? req.query.courseId : void 0
-  )
-);
-var createBatch2 = respond(
-  "Batch created successfully.",
-  (req) => createBatch(req.body),
-  httpStatus6.CREATED
-);
-var getBatch2 = respond(
-  "Batch retrieved successfully.",
-  (req) => getBatch(param(req, "id"))
-);
-var updateBatch2 = respond(
-  "Batch updated successfully.",
-  (req) => updateBatch(param(req, "id"), req.body)
-);
-var deleteBatch2 = respond(
-  "Batch deleted successfully.",
-  (req) => deleteBatch(param(req, "id"))
-);
-var createEnrollment2 = respond(
-  "Enrollment created successfully.",
-  (req) => createEnrollment(requireUser(req).id, req.body.batchId),
-  httpStatus6.CREATED
-);
-var listMyEnrollments = respond(
-  "Enrollments retrieved successfully.",
-  (req) => listEnrollmentsForStudent(requireUser(req).id)
-);
-var listEnrollments2 = respond(
-  "Enrollments retrieved successfully.",
-  () => listEnrollments()
-);
-var updateEnrollment2 = respond(
-  "Enrollment updated successfully.",
-  (req) => updateEnrollment(
-    param(req, "id"),
-    req.body
-  )
-);
 var listChapters2 = respond(
   "Chapters retrieved successfully.",
   (req) => listChapters(param(req, "batchId"))
@@ -1962,62 +1844,7 @@ var markNotificationRead2 = respond(
     requireUser(req).id
   )
 );
-var listInvoices2 = respond("Invoices retrieved successfully.", (req) => {
-  requireUser(req);
-  return listInvoices(param(req, "enrollmentId"));
-});
-var createInvoice2 = respond(
-  "Invoice created successfully.",
-  (req) => createInvoice(req.body),
-  httpStatus6.CREATED
-);
-var updateInvoice2 = respond(
-  "Invoice updated successfully.",
-  (req) => updateInvoice(param(req, "id"), req.body)
-);
-var listMyPayments = respond(
-  "Payments retrieved successfully.",
-  (req) => listPaymentsForStudent(requireUser(req).id)
-);
-var createPayment2 = respond(
-  "Payment initiated successfully.",
-  (req) => createPayment(
-    requireUser(req).id,
-    req.body
-  ),
-  httpStatus6.CREATED
-);
-var updatePayment2 = respond(
-  "Payment updated successfully.",
-  (req) => updatePayment(param(req, "id"), req.body)
-);
-var createAccessLog2 = respond(
-  "Access log created successfully.",
-  (req) => createAccessLog(
-    requireUser(req).id,
-    req.body
-  ),
-  httpStatus6.CREATED
-);
-var listAccessLogs2 = respond(
-  "Access logs retrieved successfully.",
-  (req) => listAccessLogs(param(req, "enrollmentId"))
-);
 var platformController = {
-  listCourses: listCourses2,
-  createCourse: createCourse2,
-  getCourse: getCourse2,
-  updateCourse: updateCourse2,
-  deleteCourse: deleteCourse2,
-  listBatches: listBatches2,
-  createBatch: createBatch2,
-  getBatch: getBatch2,
-  updateBatch: updateBatch2,
-  deleteBatch: deleteBatch2,
-  createEnrollment: createEnrollment2,
-  listMyEnrollments,
-  listEnrollments: listEnrollments2,
-  updateEnrollment: updateEnrollment2,
   listChapters: listChapters2,
   createChapter: createChapter2,
   updateChapter: updateChapter2,
@@ -2057,34 +1884,12 @@ var platformController = {
   updateNotice: updateNotice2,
   deleteNotice: deleteNotice2,
   listMyNotifications,
-  markNotificationRead: markNotificationRead2,
-  listInvoices: listInvoices2,
-  createInvoice: createInvoice2,
-  updateInvoice: updateInvoice2,
-  listMyPayments,
-  createPayment: createPayment2,
-  updatePayment: updatePayment2,
-  createAccessLog: createAccessLog2,
-  listAccessLogs: listAccessLogs2
+  markNotificationRead: markNotificationRead2
 };
 
 // src/app/modules/platform/platform.route.ts
 var router2 = Router2();
 var adminOnly = auth(UserRole.ADMIN);
-router2.get("/courses", platformController.listCourses);
-router2.post("/courses", adminOnly, platformController.createCourse);
-router2.get("/courses/:slug", platformController.getCourse);
-router2.patch("/courses/:id", adminOnly, platformController.updateCourse);
-router2.delete("/courses/:id", adminOnly, platformController.deleteCourse);
-router2.get("/batches", platformController.listBatches);
-router2.post("/batches", adminOnly, platformController.createBatch);
-router2.get("/batches/:id", platformController.getBatch);
-router2.patch("/batches/:id", adminOnly, platformController.updateBatch);
-router2.delete("/batches/:id", adminOnly, platformController.deleteBatch);
-router2.post("/enrollments", auth(), platformController.createEnrollment);
-router2.get("/enrollments/me", auth(), platformController.listMyEnrollments);
-router2.get("/enrollments", adminOnly, platformController.listEnrollments);
-router2.patch("/enrollments/:id", adminOnly, platformController.updateEnrollment);
 router2.get("/batches/:batchId/chapters", platformController.listChapters);
 router2.post("/batches/:batchId/chapters", adminOnly, platformController.createChapter);
 router2.patch("/chapters/:id", adminOnly, platformController.updateChapter);
@@ -2125,15 +1930,378 @@ router2.patch("/notices/:id", adminOnly, platformController.updateNotice);
 router2.delete("/notices/:id", adminOnly, platformController.deleteNotice);
 router2.get("/notifications/me", auth(), platformController.listMyNotifications);
 router2.patch("/notifications/:id/read", auth(), platformController.markNotificationRead);
-router2.get("/enrollments/:enrollmentId/invoices", auth(), platformController.listInvoices);
-router2.post("/invoices", adminOnly, platformController.createInvoice);
-router2.patch("/invoices/:id", adminOnly, platformController.updateInvoice);
-router2.get("/payments/me", auth(), platformController.listMyPayments);
-router2.post("/payments", auth(), platformController.createPayment);
-router2.patch("/payments/:id", adminOnly, platformController.updatePayment);
-router2.post("/access-logs", adminOnly, platformController.createAccessLog);
-router2.get("/enrollments/:enrollmentId/access-logs", adminOnly, platformController.listAccessLogs);
 var platform_route_default = router2;
+
+// src/app/modules/enrollment/enrollment.route.ts
+import { Router as Router3 } from "express";
+
+// src/app/modules/enrollment/enrollment.controller.ts
+import httpStatus7 from "http-status";
+
+// src/app/modules/enrollment/enrollment.service.ts
+var createEnrollment = (studentId, batchId) => prisma.enrollment.create({
+  data: { batchId, studentId, status: "PENDING" }
+});
+var listEnrollmentsForStudent = (studentId) => prisma.enrollment.findMany({
+  where: { studentId },
+  include: { batch: { include: { course: true } } }
+});
+var listEnrollments = () => prisma.enrollment.findMany({
+  include: { student: true, batch: { include: { course: true } } }
+});
+var updateEnrollment = (id, data) => prisma.enrollment.update({ where: { id }, data });
+var createAccessLog = (adminId, data) => prisma.accessAuditLog.create({ data: { ...data, adminId } });
+var listAccessLogs = (enrollmentId) => prisma.accessAuditLog.findMany({
+  where: { enrollmentId },
+  orderBy: { createdAt: "desc" }
+});
+
+// src/app/modules/enrollment/enrollment.controller.ts
+var respond2 = (message, action, statusCode = httpStatus7.OK) => catchAsync(async (req, res) => {
+  const data = await action(req);
+  sendResponse(res, { success: true, statusCode, message, data });
+});
+var param2 = (req, name) => {
+  const value = req.params[name];
+  return typeof value === "string" ? value : "";
+};
+var requireUser2 = (req) => {
+  if (!req.user) {
+    throw new HttpError(
+      httpStatus7.UNAUTHORIZED,
+      "Authentication required."
+    );
+  }
+  return req.user;
+};
+var createEnrollment2 = respond2(
+  "Enrollment created successfully.",
+  (req) => createEnrollment(requireUser2(req).id, req.body.batchId),
+  httpStatus7.CREATED
+);
+var listMyEnrollments = respond2(
+  "Enrollments retrieved successfully.",
+  (req) => listEnrollmentsForStudent(requireUser2(req).id)
+);
+var listEnrollments2 = respond2(
+  "Enrollments retrieved successfully.",
+  () => listEnrollments()
+);
+var updateEnrollment2 = respond2(
+  "Enrollment updated successfully.",
+  (req) => updateEnrollment(
+    param2(req, "id"),
+    req.body
+  )
+);
+var createAccessLog2 = respond2(
+  "Access log created successfully.",
+  (req) => createAccessLog(
+    requireUser2(req).id,
+    req.body
+  ),
+  httpStatus7.CREATED
+);
+var listAccessLogs2 = respond2(
+  "Access logs retrieved successfully.",
+  (req) => listAccessLogs(param2(req, "enrollmentId"))
+);
+var enrollmentController = {
+  createEnrollment: createEnrollment2,
+  listMyEnrollments,
+  listEnrollments: listEnrollments2,
+  updateEnrollment: updateEnrollment2,
+  createAccessLog: createAccessLog2,
+  listAccessLogs: listAccessLogs2
+};
+
+// src/app/modules/enrollment/enrollment.route.ts
+var router3 = Router3();
+var adminOnly2 = auth(UserRole.ADMIN);
+router3.post("/enrollments", auth(), enrollmentController.createEnrollment);
+router3.get("/enrollments/me", auth(), enrollmentController.listMyEnrollments);
+router3.get("/enrollments", adminOnly2, enrollmentController.listEnrollments);
+router3.patch("/enrollments/:id", adminOnly2, enrollmentController.updateEnrollment);
+router3.post("/access-logs", adminOnly2, enrollmentController.createAccessLog);
+router3.get(
+  "/enrollments/:enrollmentId/access-logs",
+  adminOnly2,
+  enrollmentController.listAccessLogs
+);
+var enrollment_route_default = router3;
+
+// src/app/modules/courses/courses.route.ts
+import { Router as Router4 } from "express";
+
+// src/app/modules/courses/courses.controller.ts
+import httpStatus8 from "http-status";
+
+// src/app/modules/courses/courses.service.ts
+var listCourses = (classLevel, includeUnpublished = false) => prisma.course.findMany({
+  where: {
+    isPublished: includeUnpublished ? void 0 : true,
+    classLevel
+  },
+  include: { batches: true }
+});
+var createCourse = (data) => prisma.course.create({ data });
+var getCourse = (slug) => prisma.course.findUnique({ where: { slug }, include: { batches: true } });
+var updateCourse = (id, data) => prisma.course.update({ where: { id }, data });
+var deleteCourse = (id) => prisma.course.delete({ where: { id } });
+var listBatches = (courseId) => prisma.batch.findMany({
+  where: { courseId },
+  include: { course: true }
+});
+var createBatch = (data) => prisma.batch.create({ data });
+var getBatch = (id) => prisma.batch.findUnique({
+  where: { id },
+  include: { course: true, schedules: true, chapters: true }
+});
+var updateBatch = (id, data) => prisma.batch.update({ where: { id }, data });
+var deleteBatch = (id) => prisma.batch.delete({ where: { id } });
+
+// src/app/modules/courses/courses.controller.ts
+var respond3 = (message, action, statusCode = httpStatus8.OK) => catchAsync(async (req, res) => {
+  const data = await action(req);
+  sendResponse(res, { success: true, statusCode, message, data });
+});
+var param3 = (req, name) => {
+  const value = req.params[name];
+  return typeof value === "string" ? value : "";
+};
+var listCourses2 = respond3(
+  "Courses retrieved successfully.",
+  (req) => listCourses(
+    typeof req.query.classLevel === "string" ? req.query.classLevel : void 0,
+    req.query.all === "true"
+  )
+);
+var createCourse2 = respond3(
+  "Course created successfully.",
+  (req) => createCourse(req.body),
+  httpStatus8.CREATED
+);
+var getCourse2 = respond3("Course retrieved successfully.", async (req) => {
+  const course = await getCourse(param3(req, "slug"));
+  if (!course) throw new HttpError(httpStatus8.NOT_FOUND, "Course not found.");
+  return course;
+});
+var updateCourse2 = respond3(
+  "Course updated successfully.",
+  (req) => updateCourse(param3(req, "id"), req.body)
+);
+var deleteCourse2 = respond3(
+  "Course deleted successfully.",
+  (req) => deleteCourse(param3(req, "id"))
+);
+var listBatches2 = respond3(
+  "Batches retrieved successfully.",
+  (req) => listBatches(
+    typeof req.query.courseId === "string" ? req.query.courseId : void 0
+  )
+);
+var createBatch2 = respond3(
+  "Batch created successfully.",
+  (req) => createBatch(req.body),
+  httpStatus8.CREATED
+);
+var getBatch2 = respond3(
+  "Batch retrieved successfully.",
+  (req) => getBatch(param3(req, "id"))
+);
+var updateBatch2 = respond3(
+  "Batch updated successfully.",
+  (req) => updateBatch(param3(req, "id"), req.body)
+);
+var deleteBatch2 = respond3(
+  "Batch deleted successfully.",
+  (req) => deleteBatch(param3(req, "id"))
+);
+var coursesController = {
+  listCourses: listCourses2,
+  createCourse: createCourse2,
+  getCourse: getCourse2,
+  updateCourse: updateCourse2,
+  deleteCourse: deleteCourse2,
+  listBatches: listBatches2,
+  createBatch: createBatch2,
+  getBatch: getBatch2,
+  updateBatch: updateBatch2,
+  deleteBatch: deleteBatch2
+};
+
+// src/app/modules/courses/courses.route.ts
+var router4 = Router4();
+var adminOnly3 = auth(UserRole.ADMIN);
+router4.get("/courses", coursesController.listCourses);
+router4.post("/courses", adminOnly3, coursesController.createCourse);
+router4.get("/courses/:slug", coursesController.getCourse);
+router4.patch("/courses/:id", adminOnly3, coursesController.updateCourse);
+router4.delete("/courses/:id", adminOnly3, coursesController.deleteCourse);
+router4.get("/batches", coursesController.listBatches);
+router4.post("/batches", adminOnly3, coursesController.createBatch);
+router4.get("/batches/:id", coursesController.getBatch);
+router4.patch("/batches/:id", adminOnly3, coursesController.updateBatch);
+router4.delete("/batches/:id", adminOnly3, coursesController.deleteBatch);
+var courses_route_default = router4;
+
+// src/app/modules/users/users.route.ts
+import { Router as Router5 } from "express";
+
+// src/app/modules/users/users.controller.ts
+import httpStatus9 from "http-status";
+
+// src/app/modules/users/users.service.ts
+var getStudentProfile = (userId) => prisma.studentProfile.findUnique({ where: { userId } });
+var upsertStudentProfile = (userId, input) => prisma.studentProfile.upsert({
+  where: { userId },
+  create: {
+    userId,
+    classLevel: input.classLevel,
+    schoolName: input.schoolName,
+    guardianName: input.guardianName,
+    guardianPhone: input.guardianPhone
+  },
+  update: {
+    classLevel: input.classLevel,
+    schoolName: input.schoolName,
+    guardianName: input.guardianName,
+    guardianPhone: input.guardianPhone
+  }
+});
+
+// src/app/modules/users/users.controller.ts
+var requireUserId = (req) => {
+  if (!req.user) {
+    throw new HttpError(
+      httpStatus9.UNAUTHORIZED,
+      "Authentication required."
+    );
+  }
+  return req.user.id;
+};
+var getMyStudentProfile = catchAsync(async (req, res) => {
+  const profile = await getStudentProfile(requireUserId(req));
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus9.OK,
+    message: "Student profile retrieved successfully.",
+    data: profile
+  });
+});
+var upsertMyStudentProfile = catchAsync(
+  async (req, res) => {
+    const profile = await upsertStudentProfile(
+      requireUserId(req),
+      req.body
+    );
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus9.OK,
+      message: "Student profile saved successfully.",
+      data: profile
+    });
+  }
+);
+var usersController = {
+  getMyStudentProfile,
+  upsertMyStudentProfile
+};
+
+// src/app/modules/users/users.route.ts
+var router5 = Router5();
+var studentOnly = auth(UserRole.STUDENT);
+router5.get("/profile/me", studentOnly, usersController.getMyStudentProfile);
+router5.put("/profile/me", studentOnly, usersController.upsertMyStudentProfile);
+var users_route_default = router5;
+
+// src/app/modules/payments/payments.route.ts
+import { Router as Router6 } from "express";
+
+// src/app/modules/payments/payments.controller.ts
+import httpStatus10 from "http-status";
+
+// src/app/modules/payments/payments.service.ts
+var listInvoices = (enrollmentId) => prisma.monthlyInvoice.findMany({ where: { enrollmentId } });
+var createInvoice = (data) => prisma.monthlyInvoice.create({ data });
+var updateInvoice = (id, data) => prisma.monthlyInvoice.update({ where: { id }, data });
+var listPaymentsForStudent = (studentId) => prisma.payment.findMany({
+  where: { studentId },
+  include: { allocations: true }
+});
+var createPayment = (studentId, data) => prisma.payment.create({ data: { ...data, studentId } });
+var updatePayment = (id, data) => prisma.payment.update({ where: { id }, data });
+
+// src/app/modules/payments/payments.controller.ts
+var respond4 = (message, action, statusCode = httpStatus10.OK) => catchAsync(async (req, res) => {
+  const data = await action(req);
+  sendResponse(res, { success: true, statusCode, message, data });
+});
+var param4 = (req, name) => {
+  const value = req.params[name];
+  return typeof value === "string" ? value : "";
+};
+var requireUserId2 = (req) => {
+  if (!req.user) {
+    throw new HttpError(
+      httpStatus10.UNAUTHORIZED,
+      "Authentication required."
+    );
+  }
+  return req.user.id;
+};
+var listInvoices2 = respond4("Invoices retrieved successfully.", (req) => {
+  requireUserId2(req);
+  return listInvoices(param4(req, "enrollmentId"));
+});
+var createInvoice2 = respond4(
+  "Invoice created successfully.",
+  (req) => createInvoice(req.body),
+  httpStatus10.CREATED
+);
+var updateInvoice2 = respond4(
+  "Invoice updated successfully.",
+  (req) => updateInvoice(param4(req, "id"), req.body)
+);
+var listMyPayments = respond4(
+  "Payments retrieved successfully.",
+  (req) => listPaymentsForStudent(requireUserId2(req))
+);
+var createPayment2 = respond4(
+  "Payment initiated successfully.",
+  (req) => createPayment(
+    requireUserId2(req),
+    req.body
+  ),
+  httpStatus10.CREATED
+);
+var updatePayment2 = respond4(
+  "Payment updated successfully.",
+  (req) => updatePayment(param4(req, "id"), req.body)
+);
+var paymentsController = {
+  listInvoices: listInvoices2,
+  createInvoice: createInvoice2,
+  updateInvoice: updateInvoice2,
+  listMyPayments,
+  createPayment: createPayment2,
+  updatePayment: updatePayment2
+};
+
+// src/app/modules/payments/payments.route.ts
+var router6 = Router6();
+var adminOnly4 = auth(UserRole.ADMIN);
+router6.get(
+  "/enrollments/:enrollmentId/invoices",
+  auth(),
+  paymentsController.listInvoices
+);
+router6.post("/invoices", adminOnly4, paymentsController.createInvoice);
+router6.patch("/invoices/:id", adminOnly4, paymentsController.updateInvoice);
+router6.get("/payments/me", auth(), paymentsController.listMyPayments);
+router6.post("/payments", auth(), paymentsController.createPayment);
+router6.patch("/payments/:id", adminOnly4, paymentsController.updatePayment);
+var payments_route_default = router6;
 
 // src/app.ts
 var app = express();
@@ -2154,6 +2322,10 @@ app.get(
 );
 app.use("/api/auth", auth_route_default);
 app.use("/api", platform_route_default);
+app.use("/api", enrollment_route_default);
+app.use("/api", courses_route_default);
+app.use("/api", users_route_default);
+app.use("/api", payments_route_default);
 app.use(notFound);
 app.use(globalErrorHandler);
 var app_default = app;

@@ -1,25 +1,16 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { ClassLevel } from "../../../generated/prisma/enums";
 import { catchAsync } from "../../utils/catchAsync";
 import { HttpError } from "../../utils/httpError";
 import { sendResponse } from "../../utils/sendResponse";
 import * as platformService from "./platform.service";
 import {
-  AccessLogCreateInput,
   AssignmentCreateInput,
   AssignmentSubmissionInput,
   AssignmentUpdateInput,
   AttendanceInput,
-  BatchCreateInput,
-  BatchUpdateInput,
   ChapterCreateInput,
   ChapterUpdateInput,
-  CourseCreateInput,
-  CourseUpdateInput,
-  EnrollmentUpdateInput,
-  InvoiceCreateInput,
-  InvoiceUpdateInput,
   LessonCreateInput,
   LessonProgressInput,
   LessonUpdateInput,
@@ -27,8 +18,6 @@ import {
   MaterialUpdateInput,
   NoticeCreateInput,
   NoticeUpdateInput,
-  PaymentCreateInput,
-  PaymentUpdateInput,
   QuizAnswersInput,
   QuizCreateInput,
   QuizUpdateInput,
@@ -64,73 +53,6 @@ const requireUser = (req: Request) => {
   }
   return req.user;
 };
-
-const listCourses = respond("Courses retrieved successfully.", (req) =>
-  platformService.listCourses(
-    typeof req.query.classLevel === "string"
-      ? (req.query.classLevel as ClassLevel)
-      : undefined,
-    req.query.all === "true",
-  ),
-);
-const createCourse = respond(
-  "Course created successfully.",
-  (req) => platformService.createCourse(req.body as CourseCreateInput),
-  httpStatus.CREATED,
-);
-const getCourse = respond("Course retrieved successfully.", async (req) => {
-  const course = await platformService.getCourse(param(req, "slug"));
-  if (!course) throw new HttpError(httpStatus.NOT_FOUND, "Course not found.");
-  return course;
-});
-const updateCourse = respond("Course updated successfully.", (req) =>
-  platformService.updateCourse(
-    param(req, "id"),
-    req.body as CourseUpdateInput,
-  ),
-);
-const deleteCourse = respond("Course deleted successfully.", (req) =>
-  platformService.deleteCourse(param(req, "id")),
-);
-
-const listBatches = respond("Batches retrieved successfully.", (req) =>
-  platformService.listBatches(
-    typeof req.query.courseId === "string" ? req.query.courseId : undefined,
-  ),
-);
-const createBatch = respond(
-  "Batch created successfully.",
-  (req) => platformService.createBatch(req.body as BatchCreateInput),
-  httpStatus.CREATED,
-);
-const getBatch = respond("Batch retrieved successfully.", (req) =>
-  platformService.getBatch(param(req, "id")),
-);
-const updateBatch = respond("Batch updated successfully.", (req) =>
-  platformService.updateBatch(param(req, "id"), req.body as BatchUpdateInput),
-);
-const deleteBatch = respond("Batch deleted successfully.", (req) =>
-  platformService.deleteBatch(param(req, "id")),
-);
-
-const createEnrollment = respond(
-  "Enrollment created successfully.",
-  (req) => platformService.createEnrollment(requireUser(req).id, req.body.batchId),
-  httpStatus.CREATED,
-);
-const listMyEnrollments = respond(
-  "Enrollments retrieved successfully.",
-  (req) => platformService.listEnrollmentsForStudent(requireUser(req).id),
-);
-const listEnrollments = respond("Enrollments retrieved successfully.", () =>
-  platformService.listEnrollments(),
-);
-const updateEnrollment = respond("Enrollment updated successfully.", (req) =>
-  platformService.updateEnrollment(
-    param(req, "id"),
-    req.body as EnrollmentUpdateInput,
-  ),
-);
 
 const listChapters = respond("Chapters retrieved successfully.", (req) =>
   platformService.listChapters(param(req, "batchId")),
@@ -360,62 +282,7 @@ const markNotificationRead = respond(
     ),
 );
 
-const listInvoices = respond("Invoices retrieved successfully.", (req) => {
-  requireUser(req);
-  return platformService.listInvoices(param(req, "enrollmentId"));
-});
-const createInvoice = respond(
-  "Invoice created successfully.",
-  (req) => platformService.createInvoice(req.body as InvoiceCreateInput),
-  httpStatus.CREATED,
-);
-const updateInvoice = respond("Invoice updated successfully.", (req) =>
-  platformService.updateInvoice(param(req, "id"), req.body as InvoiceUpdateInput),
-);
-const listMyPayments = respond("Payments retrieved successfully.", (req) =>
-  platformService.listPaymentsForStudent(requireUser(req).id),
-);
-const createPayment = respond(
-  "Payment initiated successfully.",
-  (req) =>
-    platformService.createPayment(
-      requireUser(req).id,
-      req.body as PaymentCreateInput,
-    ),
-  httpStatus.CREATED,
-);
-const updatePayment = respond("Payment updated successfully.", (req) =>
-  platformService.updatePayment(param(req, "id"), req.body as PaymentUpdateInput),
-);
-
-const createAccessLog = respond(
-  "Access log created successfully.",
-  (req) =>
-    platformService.createAccessLog(
-      requireUser(req).id,
-      req.body as AccessLogCreateInput,
-    ),
-  httpStatus.CREATED,
-);
-const listAccessLogs = respond("Access logs retrieved successfully.", (req) =>
-  platformService.listAccessLogs(param(req, "enrollmentId")),
-);
-
 export const platformController = {
-  listCourses,
-  createCourse,
-  getCourse,
-  updateCourse,
-  deleteCourse,
-  listBatches,
-  createBatch,
-  getBatch,
-  updateBatch,
-  deleteBatch,
-  createEnrollment,
-  listMyEnrollments,
-  listEnrollments,
-  updateEnrollment,
   listChapters,
   createChapter,
   updateChapter,
@@ -456,12 +323,4 @@ export const platformController = {
   deleteNotice,
   listMyNotifications,
   markNotificationRead,
-  listInvoices,
-  createInvoice,
-  updateInvoice,
-  listMyPayments,
-  createPayment,
-  updatePayment,
-  createAccessLog,
-  listAccessLogs,
 };
