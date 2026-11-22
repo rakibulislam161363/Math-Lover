@@ -7,9 +7,28 @@ export interface RegisterInput {
   phone?: string;
 }
 
+export interface VerifyRegistrationInput {
+  email: string;
+  otp: string;
+}
+
 export interface LoginInput {
   email: string;
   password: string;
+}
+
+export interface GoogleLoginInput {
+  idToken: string;
+}
+
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  email: string;
+  otp: string;
+  newPassword: string;
 }
 
 export interface AuthUser {

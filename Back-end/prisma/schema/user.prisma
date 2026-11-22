@@ -5,6 +5,8 @@ model User {
   passwordHash String
   phone        String?
   role         UserRole @default(STUDENT)
+  authProvider AuthProvider @default(CREDENTIAL)
+  googleId     String?  @unique
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

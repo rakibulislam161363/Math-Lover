@@ -1,6 +1,13 @@
 import httpStatus from "http-status";
 import { HttpError } from "../../utils/httpError";
-import { LoginInput, RegisterInput } from "./auth.interface";
+import {
+    LoginInput,
+    GoogleLoginInput,
+    ForgotPasswordInput,
+    RegisterInput,
+    ResetPasswordInput,
+    VerifyRegistrationInput,
+} from "./auth.interface";
 
 const MAX_PASSWORD_BYTES = 72;
 
@@ -78,6 +85,74 @@ export function validateLoginInput(body: unknown): LoginInput {
     }
 
     return { email: validateEmail(email), password };
+}
+
+export function validateGoogleLoginInput(body: unknown): GoogleLoginInput {
+    const input = getObjectBody(body);
+    const idToken = typeof input.idToken === "string" ? input.idToken.trim() : "";
+
+    if (!idToken || idToken.length > 8192) {
+        throw new HttpError(
+            httpStatus.BAD_REQUEST,
+            "A valid Google ID token is required.",
+        );
+    }
+
+    return { idToken };
+}
+
+export function validateForgotPasswordInput(
+    body: unknown,
+): ForgotPasswordInput {
+    const input = getObjectBody(body);
+    const email = typeof input.email === "string" ? input.email : "";
+
+    return { email: validateEmail(email) };
+}
+
+export function validateResetPasswordInput(
+    body: unknown,
+): ResetPasswordInput {
+    const input = getObjectBody(body);
+    const email = typeof input.email === "string" ? input.email : "";
+    const otp = typeof input.otp === "string" ? input.otp : "";
+    const newPassword =
+        typeof input.newPassword === "string" ? input.newPassword : "";
+
+    if (!/^\d{6}$/.test(otp)) {
+        throw new HttpError(
+            httpStatus.BAD_REQUEST,
+            "A six-digit password reset code is required.",
+        );
+    }
+    if (
+        newPassword.length < 8 ||
+        Buffer.byteLength(newPassword, "utf8") > MAX_PASSWORD_BYTES
+    ) {
+        throw new HttpError(
+            httpStatus.BAD_REQUEST,
+            "Password must be at least 8 characters and no more than 72 bytes.",
+        );
+    }
+
+    return { email: validateEmail(email), otp, newPassword };
+}
+
+export function validateRegistrationVerification(
+    body: unknown,
+): VerifyRegistrationInput {
+    const input = getObjectBody(body);
+    const email = typeof input.email === "string" ? input.email : "";
+    const otp = typeof input.otp === "string" ? input.otp : "";
+
+    if (!/^\d{6}$/.test(otp)) {
+        throw new HttpError(
+            httpStatus.BAD_REQUEST,
+            "A six-digit verification code is required.",
+        );
+    }
+
+    return { email: validateEmail(email), otp };
 }
 
 export function validateRefreshToken(token: unknown): string {

@@ -7,8 +7,12 @@ import * as authService from "./auth.service";
 import { AuthResult } from "./auth.interface";
 import {
   validateLoginInput,
+  validateGoogleLoginInput,
+  validateForgotPasswordInput,
   validateRefreshToken,
   validateRegisterInput,
+  validateRegistrationVerification,
+  validateResetPasswordInput,
 } from "./auth.validation";
 
 const cookieOptions = {
@@ -38,20 +42,35 @@ function sendAuthenticatedResponse(
     success: true,
     statusCode,
     message,
-    data: { user: result.user },
+    data: {
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+    },
   });
 }
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const input = validateRegisterInput(req.body);
-  const result = await authService.register(input);
+  await authService.register(input);
 
-  sendAuthenticatedResponse(
-    res,
-    httpStatus.CREATED,
-    "Account created successfully.",
-    result,
-  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.ACCEPTED,
+    message: "Verification code sent to your email.",
+    data: null,
+  });
+});
+
+const verifyRegistration = catchAsync(async (req: Request, res: Response) => {
+  const input = validateRegistrationVerification(req.body);
+  await authService.verifyRegistration(input);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Account created successfully. Please log in to continue.",
+    data: null,
+  });
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
@@ -64,6 +83,42 @@ const login = catchAsync(async (req: Request, res: Response) => {
     "Logged in successfully.",
     result,
   );
+});
+
+const googleLogin = catchAsync(async (req: Request, res: Response) => {
+  const input = validateGoogleLoginInput(req.body);
+  const result = await authService.googleLogin(input);
+
+  sendAuthenticatedResponse(
+    res,
+    httpStatus.OK,
+    "Logged in with Google successfully.",
+    result,
+  );
+});
+
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+  const input = validateForgotPasswordInput(req.body);
+  await authService.forgotPassword(input);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.ACCEPTED,
+    message: "If the account can reset its password, a code will be emailed.",
+    data: null,
+  });
+});
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  const input = validateResetPasswordInput(req.body);
+  await authService.resetPassword(input);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Password reset successfully.",
+    data: null,
+  });
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
@@ -109,7 +164,11 @@ const getCurrentUser = catchAsync(async (req: Request, res: Response) => {
 
 export const authController = {
   register,
+  verifyRegistration,
   login,
+  googleLogin,
+  forgotPassword,
+  resetPassword,
   logout,
   getCurrentUser,
   refreshTokens,

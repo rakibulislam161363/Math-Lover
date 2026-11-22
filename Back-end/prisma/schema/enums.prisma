@@ -3,6 +3,11 @@ enum UserRole {
   STUDENT
 }
 
+enum AuthProvider {
+  CREDENTIAL
+  GOOGLE
+}
+
 enum ClassLevel {
   CLASS_6
   CLASS_7
