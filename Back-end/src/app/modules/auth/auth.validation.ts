@@ -1,167 +1,80 @@
-import httpStatus from "http-status";
-import { HttpError } from "../../utils/httpError";
-import {
-    LoginInput,
-    GoogleLoginInput,
-    ForgotPasswordInput,
-    RegisterInput,
-    ResetPasswordInput,
-    VerifyRegistrationInput,
-} from "./auth.interface";
+import { z } from "zod";
 
-const MAX_PASSWORD_BYTES = 72;
+const emailSchema = z
+  .string()
+  .trim()
+  .max(254)
+  .email("A valid email is required.")
+  .transform((email) => email.toLowerCase());
 
-function getObjectBody(body: unknown): Record<string, unknown> {
-    if (typeof body !== "object" || body === null || Array.isArray(body)) {
-        throw new HttpError(httpStatus.BAD_REQUEST, "Request body must be an object.");
-    }
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters.")
+  .refine(
+    (password) => Buffer.byteLength(password, "utf8") <= 72,
+    "Password must be no more than 72 bytes.",
+  );
 
-    return body as Record<string, unknown>;
-}
+const verificationCodeSchema = z
+  .string()
+  .regex(/^\d{6}$/, "A six-digit verification code is required.");
 
-function validateEmail(email: string): string {
-    const normalizedEmail = email.trim().toLowerCase();
-    if (
-        normalizedEmail.length > 254 ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)
-    ) {
-        throw new HttpError(httpStatus.BAD_REQUEST, "A valid email is required.");
-    }
+export const registerValidationSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, "Full name must be between 2 and 100 characters.")
+    .max(100, "Full name must be between 2 and 100 characters."),
+  email: emailSchema,
+  password: passwordSchema,
+  phone: z
+    .string()
+    .trim()
+    .max(32, "Phone must be no more than 32 characters.")
+    .optional()
+    .transform((phone) => phone || undefined),
+});
 
-    return normalizedEmail;
-}
+export const verifyRegistrationValidationSchema = z.object({
+  email: emailSchema,
+  otp: verificationCodeSchema,
+});
 
-export function validateRegisterInput(body: unknown): RegisterInput {
-    const input = getObjectBody(body);
-    const fullName = typeof input.fullName === "string" ? input.fullName.trim() : "";
-    const email = typeof input.email === "string" ? input.email : "";
-    const password = typeof input.password === "string" ? input.password : "";
+export const loginValidationSchema = z.object({
+  email: emailSchema,
+  password: z
+    .string()
+    .min(1, "Invalid email or password.")
+    .refine(
+      (password) => Buffer.byteLength(password, "utf8") <= 72,
+      "Invalid email or password.",
+    ),
+});
 
-    if (fullName.length < 2 || fullName.length > 100) {
-        throw new HttpError(
-            httpStatus.BAD_REQUEST,
-            "Full name must be between 2 and 100 characters.",
-        );
-    }
+export const googleLoginValidationSchema = z.object({
+  idToken: z
+    .string()
+    .trim()
+    .min(1, "A valid Google ID token is required.")
+    .max(8192, "A valid Google ID token is required."),
+});
 
-    if (
-        password.length < 8 ||
-        Buffer.byteLength(password, "utf8") > MAX_PASSWORD_BYTES
-    ) {
-        throw new HttpError(
-            httpStatus.BAD_REQUEST,
-            "Password must be at least 8 characters and no more than 72 bytes.",
-        );
-    }
+export const forgotPasswordValidationSchema = z.object({
+  email: emailSchema,
+});
 
-    let phone: string | undefined;
-    if (input.phone !== undefined) {
-        if (typeof input.phone !== "string") {
-            throw new HttpError(httpStatus.BAD_REQUEST, "Phone must be a string.");
-        }
+export const resetPasswordValidationSchema = z.object({
+  email: emailSchema,
+  otp: verificationCodeSchema,
+  newPassword: passwordSchema,
+});
 
-        phone = input.phone.trim() || undefined;
-        if (phone && phone.length > 32) {
-            throw new HttpError(
-                httpStatus.BAD_REQUEST,
-                "Phone must be no more than 32 characters.",
-            );
-        }
-    }
+export const setPasswordValidationSchema = z.object({
+  newPassword: passwordSchema,
+});
 
-    return { fullName, email: validateEmail(email), password, phone };
-}
-
-export function validateLoginInput(body: unknown): LoginInput {
-    const input = getObjectBody(body);
-    const email = typeof input.email === "string" ? input.email : "";
-    const password = typeof input.password === "string" ? input.password : "";
-
-    if (!password || Buffer.byteLength(password, "utf8") > MAX_PASSWORD_BYTES) {
-        throw new HttpError(
-            httpStatus.UNAUTHORIZED,
-            "Invalid email or password.",
-        );
-    }
-
-    return { email: validateEmail(email), password };
-}
-
-export function validateGoogleLoginInput(body: unknown): GoogleLoginInput {
-    const input = getObjectBody(body);
-    const idToken = typeof input.idToken === "string" ? input.idToken.trim() : "";
-
-    if (!idToken || idToken.length > 8192) {
-        throw new HttpError(
-            httpStatus.BAD_REQUEST,
-            "A valid Google ID token is required.",
-        );
-    }
-
-    return { idToken };
-}
-
-export function validateForgotPasswordInput(
-    body: unknown,
-): ForgotPasswordInput {
-    const input = getObjectBody(body);
-    const email = typeof input.email === "string" ? input.email : "";
-
-    return { email: validateEmail(email) };
-}
-
-export function validateResetPasswordInput(
-    body: unknown,
-): ResetPasswordInput {
-    const input = getObjectBody(body);
-    const email = typeof input.email === "string" ? input.email : "";
-    const otp = typeof input.otp === "string" ? input.otp : "";
-    const newPassword =
-        typeof input.newPassword === "string" ? input.newPassword : "";
-
-    if (!/^\d{6}$/.test(otp)) {
-        throw new HttpError(
-            httpStatus.BAD_REQUEST,
-            "A six-digit password reset code is required.",
-        );
-    }
-    if (
-        newPassword.length < 8 ||
-        Buffer.byteLength(newPassword, "utf8") > MAX_PASSWORD_BYTES
-    ) {
-        throw new HttpError(
-            httpStatus.BAD_REQUEST,
-            "Password must be at least 8 characters and no more than 72 bytes.",
-        );
-    }
-
-    return { email: validateEmail(email), otp, newPassword };
-}
-
-export function validateRegistrationVerification(
-    body: unknown,
-): VerifyRegistrationInput {
-    const input = getObjectBody(body);
-    const email = typeof input.email === "string" ? input.email : "";
-    const otp = typeof input.otp === "string" ? input.otp : "";
-
-    if (!/^\d{6}$/.test(otp)) {
-        throw new HttpError(
-            httpStatus.BAD_REQUEST,
-            "A six-digit verification code is required.",
-        );
-    }
-
-    return { email: validateEmail(email), otp };
-}
-
-export function validateRefreshToken(token: unknown): string {
-    if (typeof token !== "string" || !/^[a-f0-9]{64}$/i.test(token)) {
-        throw new HttpError(
-            httpStatus.UNAUTHORIZED,
-            "A valid refresh token is required.",
-        );
-    }
-
-    return token;
-}
+export const refreshTokenValidationSchema = z.object({
+  refreshToken: z
+    .string()
+    .regex(/^[a-f0-9]{64}$/i, "A valid refresh token is required."),
+});

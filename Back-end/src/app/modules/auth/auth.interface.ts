@@ -31,6 +31,10 @@ export interface ResetPasswordInput {
   newPassword: string;
 }
 
+export interface SetPasswordInput {
+  newPassword: string;
+}
+
 export interface AuthUser {
   id: string;
   fullName: string;

@@ -10,6 +10,7 @@ import enrollmentRoutes from "./app/modules/enrollment/enrollment.route";
 import coursesRoutes from "./app/modules/courses/courses.route";
 import usersRoutes from "./app/modules/users/users.route";
 import paymentsRoutes from "./app/modules/payments/payments.route";
+import assignmentsRoutes from "./app/modules/assignments/assignments.route";
 
 const app: Application = express();
 app.use(
@@ -35,6 +36,7 @@ app.use("/api", enrollmentRoutes);
 app.use("/api", coursesRoutes);
 app.use("/api", usersRoutes);
 app.use("/api", paymentsRoutes);
+app.use("/api", assignmentsRoutes);
 
 app.use(notFound);
 app.use(globalErrorHandler);

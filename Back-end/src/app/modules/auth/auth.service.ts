@@ -18,6 +18,7 @@ import {
   LoginInput,
   RegisterInput,
   ResetPasswordInput,
+  SetPasswordInput,
   VerifyRegistrationInput,
 } from "./auth.interface";
 import path from "node:path";
@@ -467,6 +468,38 @@ export async function resetPassword(input: ResetPasswordInput): Promise<void> {
     subject: "Password Changed",
     html,
   });
+}
+
+export async function setPassword(
+  userId: string,
+  input: SetPasswordInput,
+): Promise<void> {
+  const passwordHash = await bcrypt.hash(
+    input.newPassword,
+    PASSWORD_SALT_ROUNDS,
+  );
+  const updated = await prisma.user.updateMany({
+    where: { id: userId, authProvider: AuthProvider.GOOGLE },
+    data: {
+      passwordHash,
+      authProvider: AuthProvider.CREDENTIAL,
+    },
+  });
+
+  if (updated.count === 0) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+    if (!user) {
+      throw new HttpError(httpStatus.NOT_FOUND, "User not found.");
+    }
+
+    throw new HttpError(
+      httpStatus.CONFLICT,
+      "A password is already set for this account.",
+    );
+  }
 }
 
 export async function refreshTokens(

@@ -4,16 +4,16 @@ import { catchAsync } from "../../utils/catchAsync";
 import { HttpError } from "../../utils/httpError";
 import { sendResponse } from "../../utils/sendResponse";
 import * as authService from "./auth.service";
-import { AuthResult } from "./auth.interface";
 import {
-  validateLoginInput,
-  validateGoogleLoginInput,
-  validateForgotPasswordInput,
-  validateRefreshToken,
-  validateRegisterInput,
-  validateRegistrationVerification,
-  validateResetPasswordInput,
-} from "./auth.validation";
+  AuthResult,
+  ForgotPasswordInput,
+  GoogleLoginInput,
+  LoginInput,
+  RegisterInput,
+  ResetPasswordInput,
+  SetPasswordInput,
+  VerifyRegistrationInput,
+} from "./auth.interface";
 
 const cookieOptions = {
   httpOnly: true,
@@ -50,7 +50,7 @@ function sendAuthenticatedResponse(
 }
 
 const register = catchAsync(async (req: Request, res: Response) => {
-  const input = validateRegisterInput(req.body);
+  const input = req.body as RegisterInput;
   await authService.register(input);
 
   sendResponse(res, {
@@ -62,7 +62,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 });
 
 const verifyRegistration = catchAsync(async (req: Request, res: Response) => {
-  const input = validateRegistrationVerification(req.body);
+  const input = req.body as VerifyRegistrationInput;
   await authService.verifyRegistration(input);
 
   sendResponse(res, {
@@ -74,7 +74,7 @@ const verifyRegistration = catchAsync(async (req: Request, res: Response) => {
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
-  const input = validateLoginInput(req.body);
+  const input = req.body as LoginInput;
   const result = await authService.login(input);
 
   sendAuthenticatedResponse(
@@ -86,7 +86,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
-  const input = validateGoogleLoginInput(req.body);
+  const input = req.body as GoogleLoginInput;
   const result = await authService.googleLogin(input);
 
   sendAuthenticatedResponse(
@@ -98,7 +98,7 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-  const input = validateForgotPasswordInput(req.body);
+  const input = req.body as ForgotPasswordInput;
   await authService.forgotPassword(input);
 
   sendResponse(res, {
@@ -110,13 +110,31 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const input = validateResetPasswordInput(req.body);
+  const input = req.body as ResetPasswordInput;
   await authService.resetPassword(input);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Password reset successfully.",
+    data: null,
+  });
+});
+
+const setPassword = catchAsync(async (req: Request, res: Response) => {
+  if (!req.user) {
+    throw new HttpError(httpStatus.UNAUTHORIZED, "Authentication required.");
+  }
+
+  await authService.setPassword(
+    req.user.id,
+    req.body as SetPasswordInput,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Password set successfully. You can now use Google or password login.",
     data: null,
   });
 });
@@ -138,7 +156,7 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 });
 
 const refreshTokens = catchAsync(async (req: Request, res: Response) => {
-  const refreshToken = validateRefreshToken(req.cookies?.refreshToken);
+  const refreshToken = req.cookies.refreshToken as string;
   const result = await authService.refreshTokens(refreshToken);
 
   sendAuthenticatedResponse(
@@ -169,6 +187,7 @@ export const authController = {
   googleLogin,
   forgotPassword,
   resetPassword,
+  setPassword,
   logout,
   getCurrentUser,
   refreshTokens,
