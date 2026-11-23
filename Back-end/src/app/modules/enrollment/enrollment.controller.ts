@@ -5,7 +5,6 @@ import { HttpError } from "../../utils/httpError";
 import { sendResponse } from "../../utils/sendResponse";
 import * as enrollmentService from "./enrollment.service";
 import {
-  AccessLogCreateInput,
   EnrollmentUpdateInput,
 } from "./enrollment.interface";
 
@@ -54,24 +53,9 @@ const updateEnrollment = respond("Enrollment updated successfully.", (req) =>
     req.body as EnrollmentUpdateInput,
   ),
 );
-const createAccessLog = respond(
-  "Access log created successfully.",
-  (req) =>
-    enrollmentService.createAccessLog(
-      requireUser(req).id,
-      req.body as AccessLogCreateInput,
-    ),
-  httpStatus.CREATED,
-);
-const listAccessLogs = respond("Access logs retrieved successfully.", (req) =>
-  enrollmentService.listAccessLogs(param(req, "enrollmentId")),
-);
-
 export const enrollmentController = {
   createEnrollment,
   listMyEnrollments,
   listEnrollments,
   updateEnrollment,
-  createAccessLog,
-  listAccessLogs,
 };
