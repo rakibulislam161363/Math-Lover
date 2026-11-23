@@ -18,6 +18,7 @@ const adminOnly = auth(UserRole.ADMIN);
 
 router.get(
   "/batches/:batchId/quizzes",
+  auth(),
   validateRequest(batchIdParamsSchema, "params"),
   quizzesController.listQuizzes,
 );
@@ -37,20 +38,20 @@ router.patch(
 );
 router.post(
   "/quizzes/:quizId/attempts",
-  auth(),
+  auth(UserRole.STUDENT),
   validateRequest(quizAttemptParamsSchema, "params"),
   quizzesController.startQuizAttempt,
 );
 router.post(
   "/quiz-attempts/:attemptId/submit",
-  auth(),
+  auth(UserRole.STUDENT),
   validateRequest(attemptIdParamsSchema, "params"),
   validateRequest(submitQuizAttemptValidationSchema),
   quizzesController.submitQuizAttempt,
 );
 router.get(
   "/quiz-attempts/me",
-  auth(),
+  auth(UserRole.STUDENT),
   quizzesController.listMyQuizAttempts,
 );
 

@@ -28,34 +28,49 @@ const param = (req: Request, name: string): string => {
   return typeof value === "string" ? value : "";
 };
 
-const requireUserId = (req: Request): string => {
+const requireUser = (req: Request) => {
   if (!req.user) {
     throw new HttpError(
       httpStatus.UNAUTHORIZED,
       "Authentication required.",
     );
   }
-  return req.user.id;
+  return req.user;
 };
 
-const listAssignments = respond("Assignments retrieved successfully.", (req) =>
-  assignmentsService.listAssignments(
-    typeof req.query.batchId === "string" ? req.query.batchId : undefined,
+const listAssignments = respond("Assignments retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return assignmentsService.listAssignments(
+    user.id,
+    user.role,
+    typeof req.params.batchId === "string"
+      ? req.params.batchId
+      : typeof req.query.batchId === "string"
+        ? req.query.batchId
+        : undefined,
     req.query.all === "true",
-  ),
-);
+  );
+});
 
 const createAssignment = respond(
   "Assignment created successfully.",
   (req) =>
     assignmentsService.createAssignment(
       req.body as AssignmentCreateInput,
+      typeof req.params.batchId === "string"
+        ? req.params.batchId
+        : undefined,
     ),
   httpStatus.CREATED,
 );
 
 const getAssignment = respond("Assignment retrieved successfully.", async (req) => {
-  const assignment = await assignmentsService.getAssignment(param(req, "id"));
+  const user = requireUser(req);
+  const assignment = await assignmentsService.getAssignment(
+    param(req, "id"),
+    user.id,
+    user.role,
+  );
   if (!assignment) {
     throw new HttpError(httpStatus.NOT_FOUND, "Assignment not found.");
   }
@@ -85,7 +100,7 @@ const submitAssignment = respond(
   "Assignment submitted successfully.",
   (req) =>
     assignmentsService.submitAssignment(
-      requireUserId(req),
+      requireUser(req).id,
       param(req, "assignmentId"),
       req.body as AssignmentSubmissionCreateInput,
     ),
@@ -95,14 +110,14 @@ const submitAssignment = respond(
 const listMySubmissions = respond(
   "My submissions retrieved successfully.",
   (req) =>
-    assignmentsService.listSubmissionsForStudent(requireUserId(req)),
+    assignmentsService.listSubmissionsForStudent(requireUser(req).id),
 );
 
 const reviewSubmission = respond(
   "Submission reviewed successfully.",
   (req) =>
     assignmentsService.reviewSubmission(
-      requireUserId(req),
+      requireUser(req).id,
       param(req, "id"),
       req.body as AssignmentSubmissionUpdateInput,
     ),

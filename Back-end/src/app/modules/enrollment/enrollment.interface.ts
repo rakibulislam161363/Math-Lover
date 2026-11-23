@@ -1,3 +1,6 @@
-import { Prisma } from "../../../generated/prisma/client";
+import type { z } from "zod";
+import type { updateEnrollmentValidationSchema } from "./enrollment.validation";
 
-export type EnrollmentUpdateInput = Prisma.EnrollmentUncheckedUpdateInput;
+export type EnrollmentUpdateInput = z.infer<
+  typeof updateEnrollmentValidationSchema
+>;

@@ -11,14 +11,15 @@ import {
 
 const router = Router();
 const adminOnly = auth(UserRole.ADMIN);
+const studentOnly = auth(UserRole.STUDENT);
 
 router.post(
   "/enrollments",
-  auth(),
+  studentOnly,
   validateRequest(createEnrollmentValidationSchema),
   enrollmentController.createEnrollment,
 );
-router.get("/enrollments/me", auth(), enrollmentController.listMyEnrollments);
+router.get("/enrollments/me", studentOnly, enrollmentController.listMyEnrollments);
 router.get("/enrollments", adminOnly, enrollmentController.listEnrollments);
 router.patch(
   "/enrollments/:id",

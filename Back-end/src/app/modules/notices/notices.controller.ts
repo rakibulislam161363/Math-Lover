@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
+import { HttpError } from "../../utils/httpError";
 import { sendResponse } from "../../utils/sendResponse";
 import * as noticesService from "./notices.service";
 import { NoticeCreateInput, NoticeUpdateInput } from "./notices.interface";
@@ -22,13 +23,26 @@ const param = (req: Request, name: string): string => {
   return typeof value === "string" ? value : "";
 };
 
-const listNotices = respond("Notices retrieved successfully.", (req) =>
-  noticesService.listNotices(
+const requireUser = (req: Request) => {
+  if (!req.user) {
+    throw new HttpError(
+      httpStatus.UNAUTHORIZED,
+      "Authentication required.",
+    );
+  }
+  return req.user;
+};
+
+const listNotices = respond("Notices retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return noticesService.listNotices(
     typeof req.params.batchId === "string"
       ? req.params.batchId
       : undefined,
-  ),
-);
+    user.id,
+    user.role,
+  );
+});
 
 const createNotice = respond(
   "Notice created successfully.",

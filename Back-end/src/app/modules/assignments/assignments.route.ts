@@ -6,6 +6,8 @@ import { assignmentsController } from "./assignments.controller";
 import {
   assignmentIdParamsSchema,
   assignmentSubmissionsParamsSchema,
+  batchIdParamsSchema,
+  createBatchAssignmentValidationSchema,
   createAssignmentValidationSchema,
   listAssignmentsQuerySchema,
   reviewSubmissionValidationSchema,
@@ -15,9 +17,26 @@ import {
 
 const router = Router();
 const adminOnly = auth(UserRole.ADMIN);
+const authenticated = auth();
+const studentOnly = auth(UserRole.STUDENT);
+
+router.get(
+  "/batches/:batchId/assignments",
+  authenticated,
+  validateRequest(batchIdParamsSchema, "params"),
+  assignmentsController.listAssignments,
+);
+router.post(
+  "/batches/:batchId/assignments",
+  adminOnly,
+  validateRequest(batchIdParamsSchema, "params"),
+  validateRequest(createBatchAssignmentValidationSchema),
+  assignmentsController.createAssignment,
+);
 
 router.get(
   "/assignments",
+  authenticated,
   validateRequest(listAssignmentsQuerySchema, "query"),
   assignmentsController.listAssignments,
 );
@@ -29,6 +48,7 @@ router.post(
 );
 router.get(
   "/assignments/:id",
+  authenticated,
   validateRequest(assignmentIdParamsSchema, "params"),
   assignmentsController.getAssignment,
 );
@@ -54,14 +74,14 @@ router.get(
 );
 router.post(
   "/assignments/:assignmentId/submissions",
-  auth(),
+  studentOnly,
   validateRequest(assignmentSubmissionsParamsSchema, "params"),
   validateRequest(submitAssignmentValidationSchema),
   assignmentsController.submitAssignment,
 );
 router.get(
   "/submissions/me",
-  auth(),
+  studentOnly,
   assignmentsController.listMySubmissions,
 );
 router.patch(

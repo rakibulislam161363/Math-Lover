@@ -29,21 +29,39 @@ const param = (req: Request, name: string): string => {
   return typeof value === "string" ? value : "";
 };
 
-const listCourses = respond("Courses retrieved successfully.", (req) =>
-  coursesService.listCourses(
+const requireUser = (req: Request) => {
+  if (!req.user) {
+    throw new HttpError(
+      httpStatus.UNAUTHORIZED,
+      "Authentication required.",
+    );
+  }
+  return req.user;
+};
+
+const listCourses = respond("Courses retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return coursesService.listCourses(
+    user.id,
+    user.role,
     typeof req.query.classLevel === "string"
       ? (req.query.classLevel as ClassLevel)
       : undefined,
     req.query.all === "true",
-  ),
-);
+  );
+});
 const createCourse = respond(
   "Course created successfully.",
   (req) => coursesService.createCourse(req.body as CourseCreateInput),
   httpStatus.CREATED,
 );
 const getCourse = respond("Course retrieved successfully.", async (req) => {
-  const course = await coursesService.getCourse(param(req, "slug"));
+  const user = requireUser(req);
+  const course = await coursesService.getCourse(
+    param(req, "slug"),
+    user.id,
+    user.role,
+  );
   if (!course) throw new HttpError(httpStatus.NOT_FOUND, "Course not found.");
   return course;
 });
@@ -54,19 +72,23 @@ const deleteCourse = respond("Course deleted successfully.", (req) =>
   coursesService.deleteCourse(param(req, "id")),
 );
 
-const listBatches = respond("Batches retrieved successfully.", (req) =>
-  coursesService.listBatches(
+const listBatches = respond("Batches retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return coursesService.listBatches(
     typeof req.query.courseId === "string" ? req.query.courseId : undefined,
-  ),
-);
+    user.id,
+    user.role,
+  );
+});
 const createBatch = respond(
   "Batch created successfully.",
   (req) => coursesService.createBatch(req.body as BatchCreateInput),
   httpStatus.CREATED,
 );
-const getBatch = respond("Batch retrieved successfully.", (req) =>
-  coursesService.getBatch(param(req, "id")),
-);
+const getBatch = respond("Batch retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return coursesService.getBatch(param(req, "id"), user.id, user.role);
+});
 const updateBatch = respond("Batch updated successfully.", (req) =>
   coursesService.updateBatch(param(req, "id"), req.body as BatchUpdateInput),
 );

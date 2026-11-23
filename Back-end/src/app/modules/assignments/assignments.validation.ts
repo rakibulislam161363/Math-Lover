@@ -10,6 +10,10 @@ export const assignmentSubmissionsParamsSchema = z.object({
   assignmentId: uuidSchema,
 });
 
+export const batchIdParamsSchema = z.object({
+  batchId: uuidSchema,
+});
+
 export const listAssignmentsQuerySchema = z.object({
   batchId: uuidSchema.optional(),
   all: z.enum(["true", "false"]).optional(),
@@ -23,6 +27,15 @@ const dateTimeSchema = z
 
 export const createAssignmentValidationSchema = z.object({
   batchId: uuidSchema,
+  title: z.string().trim().min(1).max(255),
+  instructions: z.string().trim().min(1),
+  totalMarks: z.number().positive().max(999999.99),
+  dueAt: dateTimeSchema,
+  attachmentUrl: z.string().url().nullable().optional(),
+  isPublished: z.boolean().optional(),
+});
+
+export const createBatchAssignmentValidationSchema = z.object({
   title: z.string().trim().min(1).max(255),
   instructions: z.string().trim().min(1),
   totalMarks: z.number().positive().max(999999.99),

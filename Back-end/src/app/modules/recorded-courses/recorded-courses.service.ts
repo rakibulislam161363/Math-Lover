@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import { UserRole } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { HttpError } from "../../utils/httpError";
+import { notifyBatchStudents } from "../notifications/notifications.service";
 import {
   ChapterCreateInput,
   ChapterUpdateInput,
@@ -15,17 +16,23 @@ const assertRecordedAccess = async (
   batchId: string,
   requireMaterials = false,
 ) => {
+  const now = new Date();
   const enrollment = await prisma.enrollment.findFirst({
     where: {
       studentId,
       batchId,
       status: { in: ["ACTIVE", "COMPLETED"] },
+      batch: {
+        is: {
+          OR: [{ endDate: null }, { endDate: { gt: now } }],
+        },
+      },
       ...(requireMaterials
         ? { materialAccessEnabled: true }
         : {
             OR: [
               { recordedAccessUntil: null },
-              { recordedAccessUntil: { gt: new Date() } },
+              { recordedAccessUntil: { gt: now } },
             ],
           }),
     },
@@ -121,20 +128,55 @@ export const listLessons = async (
 export const createLesson = async (
   chapterId: string,
   data: LessonCreateInput,
-) => {
-  const chapter = await prisma.chapter.findUnique({
-    where: { id: chapterId },
-    select: { id: true },
+) =>
+  prisma.$transaction(async (tx) => {
+    const chapter = await tx.chapter.findUnique({
+      where: { id: chapterId },
+      select: { id: true, batchId: true },
+    });
+    if (!chapter) {
+      throw new HttpError(httpStatus.NOT_FOUND, "Chapter not found.");
+    }
+
+    const lesson = await tx.lesson.create({ data: { ...data, chapterId } });
+    if (lesson.isPublished) {
+      await notifyBatchStudents(tx, chapter.batchId, {
+        title: "New recorded lesson",
+        message: lesson.title,
+        type: "NEW_LESSON",
+        relatedEntityId: lesson.id,
+      });
+    }
+    return lesson;
   });
-  if (!chapter) {
-    throw new HttpError(httpStatus.NOT_FOUND, "Chapter not found.");
-  }
 
-  return prisma.lesson.create({ data: { ...data, chapterId } });
-};
+export const updateLesson = async (
+  id: string,
+  data: LessonUpdateInput,
+) =>
+  prisma.$transaction(async (tx) => {
+    const existing = await tx.lesson.findUnique({
+      where: { id },
+      select: {
+        isPublished: true,
+        chapter: { select: { batchId: true } },
+      },
+    });
+    if (!existing) {
+      throw new HttpError(httpStatus.NOT_FOUND, "Lesson not found.");
+    }
 
-export const updateLesson = (id: string, data: LessonUpdateInput) =>
-  prisma.lesson.update({ where: { id }, data });
+    const lesson = await tx.lesson.update({ where: { id }, data });
+    if (!existing.isPublished && lesson.isPublished) {
+      await notifyBatchStudents(tx, existing.chapter.batchId, {
+        title: "New recorded lesson",
+        message: lesson.title,
+        type: "NEW_LESSON",
+        relatedEntityId: lesson.id,
+      });
+    }
+    return lesson;
+  });
 
 export const deleteLesson = (id: string) =>
   prisma.lesson.delete({ where: { id } });

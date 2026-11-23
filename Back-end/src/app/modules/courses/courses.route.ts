@@ -20,6 +20,7 @@ const adminOnly = auth(UserRole.ADMIN);
 
 router.get(
   "/courses",
+  auth(),
   validateRequest(listCoursesQuerySchema, "query"),
   coursesController.listCourses,
 );
@@ -31,6 +32,7 @@ router.post(
 );
 router.get(
   "/courses/:slug",
+  auth(),
   validateRequest(courseSlugParamsSchema, "params"),
   coursesController.getCourse,
 );
@@ -50,6 +52,7 @@ router.delete(
 
 router.get(
   "/batches",
+  auth(),
   validateRequest(listBatchesQuerySchema, "query"),
   coursesController.listBatches,
 );
@@ -61,6 +64,7 @@ router.post(
 );
 router.get(
   "/batches/:id",
+  auth(),
   validateRequest(batchIdParamsSchema, "params"),
   coursesController.getBatch,
 );

@@ -11,6 +11,10 @@ export const batchIdParamsSchema = z.object({
   batchId: uuidSchema,
 });
 
+export const scheduleIdParamsSchema = z.object({
+  id: uuidSchema,
+});
+
 export const sessionIdParamsSchema = z.object({
   id: uuidSchema,
 });
@@ -58,6 +62,52 @@ export const createScheduleValidationSchema = z
       });
     }
   });
+
+export const updateScheduleValidationSchema = z
+  .object({
+    dayOfWeek: z
+      .enum([
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY",
+      ])
+      .optional(),
+    startTime: timeSchema.optional(),
+    endTime: timeSchema.optional(),
+    timezone: z.string().trim().min(1).optional(),
+    effectiveFrom: dateSchema.nullable().optional(),
+    effectiveUntil: dateSchema.nullable().optional(),
+    isActive: z.boolean().optional(),
+  })
+  .refine((schedule) => Object.keys(schedule).length > 0, {
+    message: "At least one field must be provided.",
+  })
+  .refine(
+    (schedule) =>
+      schedule.startTime === undefined ||
+      schedule.endTime === undefined ||
+      schedule.endTime > schedule.startTime,
+    {
+      message: "Schedule end time must be after its start time.",
+      path: ["endTime"],
+    },
+  )
+  .refine(
+    (schedule) =>
+      schedule.effectiveFrom === undefined ||
+      schedule.effectiveUntil === undefined ||
+      schedule.effectiveFrom === null ||
+      schedule.effectiveUntil === null ||
+      schedule.effectiveUntil >= schedule.effectiveFrom,
+    {
+      message: "Schedule end date must be on or after its start date.",
+      path: ["effectiveUntil"],
+    },
+  );
 
 const createSessionSchema = z.object({
   scheduleId: uuidSchema.nullable().optional(),

@@ -34,24 +34,27 @@ const quizQuestionSchema = z.object({
     .optional(),
 });
 
-export const createQuizValidationSchema = z.object({
-  title: z.string().trim().min(1).max(255),
-  description: z.string().trim().nullable().optional(),
-  totalMarks: z.number().positive().max(999999.99),
-  durationMinutes: z.number().int().positive().nullable().optional(),
-  startAt: z
-    .iso.datetime()
-    .transform((value) => new Date(value))
-    .nullable()
-    .optional(),
-  endAt: z
-    .iso.datetime()
-    .transform((value) => new Date(value))
-    .nullable()
-    .optional(),
-  isPublished: z.boolean().optional(),
-  questions: z.array(quizQuestionSchema).optional(),
-});
+const quizDateSchema = z
+  .iso.datetime()
+  .transform((value) => new Date(value))
+  .nullable()
+  .optional();
+
+export const createQuizValidationSchema = z
+  .object({
+    title: z.string().trim().min(1).max(255),
+    description: z.string().trim().nullable().optional(),
+    totalMarks: z.number().positive().max(999999.99),
+    durationMinutes: z.number().int().positive().nullable().optional(),
+    startAt: quizDateSchema,
+    endAt: quizDateSchema,
+    isPublished: z.boolean().optional(),
+    questions: z.array(quizQuestionSchema).optional(),
+  })
+  .refine((quiz) => !quiz.startAt || !quiz.endAt || quiz.endAt > quiz.startAt, {
+    message: "Quiz end time must be after its start time.",
+    path: ["endAt"],
+  });
 
 export const updateQuizValidationSchema = z
   .object({
@@ -59,20 +62,23 @@ export const updateQuizValidationSchema = z
     description: z.string().trim().nullable().optional(),
     totalMarks: z.number().positive().max(999999.99).optional(),
     durationMinutes: z.number().int().positive().nullable().optional(),
-    startAt: z
-      .iso.datetime()
-      .transform((value) => new Date(value))
-      .nullable()
-      .optional(),
-    endAt: z
-      .iso.datetime()
-      .transform((value) => new Date(value))
-      .nullable()
-      .optional(),
+    startAt: quizDateSchema,
+    endAt: quizDateSchema,
     isPublished: z.boolean().optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided.",
+  })
+  .refine(
+    (quiz) =>
+      quiz.startAt === undefined ||
+      quiz.endAt === undefined ||
+      quiz.startAt === null ||
+      quiz.endAt === null ||
+      quiz.endAt > quiz.startAt,
+    {
+      message: "Quiz end time must be after its start time.",
+      path: ["endAt"],
   });
 
 export const submitQuizAttemptValidationSchema = z.object({

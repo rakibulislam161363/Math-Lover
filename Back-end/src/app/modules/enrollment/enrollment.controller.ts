@@ -50,6 +50,7 @@ const listEnrollments = respond("Enrollments retrieved successfully.", () =>
 const updateEnrollment = respond("Enrollment updated successfully.", (req) =>
   enrollmentService.updateEnrollment(
     param(req, "id"),
+    requireUser(req).id,
     req.body as EnrollmentUpdateInput,
   ),
 );

@@ -7,6 +7,7 @@ import * as liveClassesService from "./live-classes.service";
 import {
   AttendanceInput,
   ScheduleCreateInput,
+  ScheduleUpdateInput,
   SessionCreateInput,
   SessionUpdateInput,
 } from "./live-classes.interface";
@@ -52,10 +53,26 @@ const createSchedule = respond(
   httpStatus.CREATED,
 );
 
+const updateSchedule = respond("Schedule updated successfully.", (req) =>
+  liveClassesService.updateSchedule(
+    param(req, "id"),
+    req.body as ScheduleUpdateInput,
+  ),
+);
+
 const listSessions = respond("Sessions retrieved successfully.", (req) => {
   const user = requireUser(req);
   return liveClassesService.listSessions(
     param(req, "batchId"),
+    user.id,
+    user.role,
+  );
+});
+
+const getJoinLink = respond("Class join link retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return liveClassesService.getJoinLink(
+    param(req, "sessionId"),
     user.id,
     user.role,
   );
@@ -93,7 +110,9 @@ const markAttendance = respond("Attendance marked successfully.", (req) =>
 export const liveClassesController = {
   listSchedules,
   createSchedule,
+  updateSchedule,
   listSessions,
+  getJoinLink,
   createSession,
   updateSession,
   listAttendance,

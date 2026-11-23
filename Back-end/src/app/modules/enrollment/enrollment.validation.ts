@@ -12,7 +12,9 @@ export const createEnrollmentValidationSchema = z.object({
 
 const dateTimeSchema = z
   .iso.datetime()
-  .transform((value) => new Date(value))
+  .transform((value) => new Date(value));
+
+const nullableDateTimeSchema = dateTimeSchema
   .nullable()
   .optional();
 
@@ -21,14 +23,29 @@ export const updateEnrollmentValidationSchema = z
     status: z
       .enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "SUSPENDED"])
       .optional(),
-    enrolledAt: dateTimeSchema,
-    startedAt: dateTimeSchema,
-    endedAt: dateTimeSchema,
-    recordedAccessUntil: dateTimeSchema,
+    enrolledAt: dateTimeSchema.optional(),
+    startedAt: nullableDateTimeSchema,
+    endedAt: nullableDateTimeSchema,
+    recordedAccessUntil: nullableDateTimeSchema,
     liveAccessEnabled: z.boolean().optional(),
     materialAccessEnabled: z.boolean().optional(),
     assignmentAccessEnabled: z.boolean().optional(),
+    reason: z.string().trim().min(1).max(1000).optional(),
   })
-  .refine((data) => Object.keys(data).length > 0, {
+  .refine((data) => Object.keys(data).some((key) => key !== "reason"), {
     message: "At least one field must be provided.",
-  });
+  })
+  .refine(
+    (data) =>
+      !(
+        "status" in data ||
+        "recordedAccessUntil" in data ||
+        "liveAccessEnabled" in data ||
+        "materialAccessEnabled" in data ||
+        "assignmentAccessEnabled" in data
+      ) || Boolean(data.reason),
+    {
+      message: "A reason is required when changing enrollment access.",
+      path: ["reason"],
+    },
+  );

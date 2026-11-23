@@ -40,7 +40,18 @@ export const listMaterials = async (
   }
 
   return prisma.material.findMany({
-    where: { batchId, isPublished: isAdmin ? undefined : true },
+    where: {
+      batchId,
+      isPublished: isAdmin ? undefined : true,
+      ...(isAdmin
+        ? {}
+        : {
+            OR: [
+              { chapterId: null },
+              { chapter: { is: { isPublished: true } } },
+            ],
+          }),
+    },
     orderBy: { createdAt: "desc" },
   });
 };

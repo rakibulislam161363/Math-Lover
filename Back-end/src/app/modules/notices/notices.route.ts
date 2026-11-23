@@ -13,9 +13,10 @@ import {
 const router = Router();
 const adminOnly = auth(UserRole.ADMIN);
 
-router.get("/notices", noticesController.listNotices);
+router.get("/notices", auth(), noticesController.listNotices);
 router.get(
   "/batches/:batchId/notices",
+  auth(),
   validateRequest(batchIdParamsSchema, "params"),
   noticesController.listNotices,
 );

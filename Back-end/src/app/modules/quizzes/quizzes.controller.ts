@@ -37,9 +37,14 @@ const requireUser = (req: Request) => {
   return req.user;
 };
 
-const listQuizzes = respond("Quizzes retrieved successfully.", (req) =>
-  quizzesService.listQuizzes(param(req, "batchId")),
-);
+const listQuizzes = respond("Quizzes retrieved successfully.", (req) => {
+  const user = requireUser(req);
+  return quizzesService.listQuizzes(
+    param(req, "batchId"),
+    user.id,
+    user.role,
+  );
+});
 
 const createQuiz = respond(
   "Quiz created successfully.",

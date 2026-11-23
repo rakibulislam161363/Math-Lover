@@ -10,6 +10,8 @@ import {
   markAttendanceValidationSchema,
   sessionAttendanceParamsSchema,
   sessionIdParamsSchema,
+  scheduleIdParamsSchema,
+  updateScheduleValidationSchema,
   updateSessionValidationSchema,
 } from "./live-classes.validation";
 
@@ -28,11 +30,24 @@ router.post(
   validateRequest(createScheduleValidationSchema),
   liveClassesController.createSchedule,
 );
+router.patch(
+  "/schedules/:id",
+  adminOnly,
+  validateRequest(scheduleIdParamsSchema, "params"),
+  validateRequest(updateScheduleValidationSchema),
+  liveClassesController.updateSchedule,
+);
 router.get(
   "/batches/:batchId/sessions",
   auth(),
   validateRequest(batchIdParamsSchema, "params"),
   liveClassesController.listSessions,
+);
+router.get(
+  "/sessions/:sessionId/join",
+  auth(),
+  validateRequest(sessionAttendanceParamsSchema, "params"),
+  liveClassesController.getJoinLink,
 );
 router.post(
   "/batches/:batchId/sessions",
