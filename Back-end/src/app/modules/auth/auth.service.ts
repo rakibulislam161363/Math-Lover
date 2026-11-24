@@ -24,7 +24,7 @@ import {
 import path from "node:path";
 
 const PASSWORD_SALT_ROUNDS = 12;
-const ACCESS_TOKEN_TTL = "15m";
+const ACCESS_TOKEN_TTL = "1d";
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const REGISTRATION_OTP_TTL_SECONDS = 5 * 60;
 const PASSWORD_RESET_OTP_TTL_SECONDS = 5 * 60;
