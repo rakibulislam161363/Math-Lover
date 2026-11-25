@@ -9,7 +9,7 @@ import {
   InvoiceUpdateInput,
   PaymentCreateInput,
   PaymentUpdateInput,
-} from "./payments.interface";
+} from "./payments.interface"
 
 type ControllerAction = (req: Request) => Promise<unknown>;
 
@@ -35,7 +35,7 @@ const requireUserId = (req: Request): string => {
       "Authentication required.",
     );
   }
-  return req.user.id;
+  return req.user.id
 };
 
 const listInvoices = respond("Invoices retrieved successfully.", (req) => {
