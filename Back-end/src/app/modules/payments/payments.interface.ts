@@ -1,9 +1,19 @@
-import { Prisma } from "../../../generated/prisma/client";
+export type CreateInvoiceInput = {
+  enrollmentId: string;
+  billingMonth: string;
+};
 
-export type InvoiceCreateInput = Prisma.MonthlyInvoiceUncheckedCreateInput;
-export type InvoiceUpdateInput = Prisma.MonthlyInvoiceUncheckedUpdateInput;
-export type PaymentCreateInput = Omit<
-  Prisma.PaymentUncheckedCreateInput,
-  "studentId"
->;
-export type PaymentUpdateInput = Prisma.PaymentUncheckedUpdateInput;
+export type UpdateInvoiceInput = {
+  dueDate: Date;
+};
+
+export type SubmitPaymentInput = {
+  invoiceId: string;
+  senderNumber: string;
+  transactionId: string;
+};
+
+export type PaymentDecisionInput = {
+  decision: "APPROVED" | "REJECTED";
+  reason?: string;
+};

@@ -66,6 +66,11 @@ enum PaymentMethod {
   OTHER
 }
 
+enum PaymentVerificationDecision {
+  APPROVED
+  REJECTED
+}
+
 enum DayOfWeek {
   MONDAY
   TUESDAY

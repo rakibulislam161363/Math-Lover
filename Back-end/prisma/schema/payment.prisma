@@ -6,6 +6,7 @@ model Payment {
   currency            String          @default("BDT") @db.VarChar(3)
   provider            PaymentProvider
   transactionId       String?         @unique
+  senderNumber        String?         @db.VarChar(20)
   gatewayTransactionId String?        @unique
   idempotencyKey      String?         @unique
   status              PaymentStatus   @default(INITIATED)
@@ -18,9 +19,25 @@ model Payment {
   student     User                @relation("StudentPayments", fields: [studentId], references: [id], onDelete: Restrict)
   enrollment  Enrollment          @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
   allocations PaymentAllocation[]
+  verifications PaymentVerification[]
 
   @@index([studentId, status])
   @@index([enrollmentId, createdAt])
+}
+
+model PaymentVerification {
+  id        String                      @id @default(uuid()) @db.Uuid
+  paymentId String                      @db.Uuid
+  adminId   String                      @db.Uuid
+  decision  PaymentVerificationDecision
+  reason    String?
+  createdAt DateTime                    @default(now())
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  admin   User    @relation("PaymentVerifier", fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([paymentId, createdAt])
+  @@index([adminId, createdAt])
 }
 
 model PaymentAllocation {

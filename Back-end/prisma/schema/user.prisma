@@ -14,6 +14,7 @@ model User {
   studentProfile       StudentProfile?
   enrollments          Enrollment[]          @relation("StudentEnrollments")
   payments             Payment[]              @relation("StudentPayments")
+  paymentVerifications PaymentVerification[]  @relation("PaymentVerifier")
   attendances          Attendance[]
   lessonProgress       LessonProgress[]
   assignmentSubmissions AssignmentSubmission[]

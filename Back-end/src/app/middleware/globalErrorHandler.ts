@@ -27,6 +27,9 @@ export const globalErrorHandler: ErrorRequestHandler = (
     if (error.code === "P2002") {
       statusCode = httpStatus.CONFLICT;
       message = "A record with the provided unique value already exists.";
+    } else if (error.code === "P2034") {
+      statusCode = httpStatus.CONFLICT;
+      message = "This payment request conflicted with another update. Please retry.";
     } else if (error.code === "P2003") {
       statusCode = httpStatus.BAD_REQUEST;
       message = "A related record does not exist.";
